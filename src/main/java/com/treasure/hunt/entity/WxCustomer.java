@@ -11,7 +11,7 @@ import java.util.Date;
  * @Version 版本号：v1.0.0
  */
 @Entity
-@Table(name="wx_customer")
+@Table(name = "wx_customer")
 public class WxCustomer implements Serializable {
 
     /**
@@ -19,7 +19,7 @@ public class WxCustomer implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long  customerId;
+    private Long customerId;
     /**
      * openId
      */
@@ -56,12 +56,14 @@ public class WxCustomer implements Serializable {
      * 手机号
      */
     private String mobile;
-
+    /**
+     * 积分
+     */
+    private Integer integral;
     /**
      * 创建时间
      */
     private Date createTime;
-
     /**
      * 修改时间
      */
@@ -162,5 +164,13 @@ public class WxCustomer implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
     }
 }

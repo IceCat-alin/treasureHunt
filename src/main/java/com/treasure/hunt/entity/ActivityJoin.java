@@ -8,13 +8,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Description 类描述：活动点赞
+ * @Description 类描述：活动加入
  * @Author 创建人：linying
  * @Date 创建时间：2018/6/19 11:10
  * @Version 版本号：v1.0.0
  */
 @Entity
-public class ActivityLike implements Serializable {
+public class ActivityJoin implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

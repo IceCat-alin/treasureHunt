@@ -12,5 +12,6 @@ public interface ActivityService {
 
     PageList<ActivityDto> getActivityPage(Integer pageNo, Integer pageSize, String sort, String sortField, ActivityDto activityDto) throws BusinessException;
 
+    ActivityDto getActivity(Long activityId,Long customerId) throws BusinessException;
 
 }

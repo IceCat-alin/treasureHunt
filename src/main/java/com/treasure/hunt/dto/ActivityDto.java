@@ -36,6 +36,11 @@ public class ActivityDto implements Serializable {
     private Long typeId;
 
     /**
+     * 类型名称
+     */
+    private String typeName;
+
+    /**
      * 活动地址
      */
     private String address;
@@ -84,6 +89,31 @@ public class ActivityDto implements Serializable {
      * 活动图片
      */
     private List<ActivityImage> imageList;
+
+    /**
+     * 活动图片
+     */
+    private String[] images;
+
+    /**
+     * 是否点赞
+     */
+    private Boolean isLike = false;
+
+    /**
+     * 是否加入
+     */
+    private Boolean isJoin = false;
+
+    /**
+     * 点赞人数
+     */
+    private Long likeNum;
+
+    /**
+     * 加入人数
+     */
+    private Long joinNum;
 
 
     public Long getId() {
@@ -204,5 +234,53 @@ public class ActivityDto implements Serializable {
 
     public void setImageList(List<ActivityImage> imageList) {
         this.imageList = imageList;
+    }
+
+    public Boolean getLike() {
+        return isLike;
+    }
+
+    public void setLike(Boolean like) {
+        isLike = like;
+    }
+
+    public String[] getImages() {
+        return images;
+    }
+
+    public void setImages(String[] images) {
+        this.images = images;
+    }
+
+    public Long getLikeNum() {
+        return likeNum;
+    }
+
+    public void setLikeNum(Long likeNum) {
+        this.likeNum = likeNum;
+    }
+
+    public Long getJoinNum() {
+        return joinNum;
+    }
+
+    public void setJoinNum(Long joinNum) {
+        this.joinNum = joinNum;
+    }
+
+    public Boolean getJoin() {
+        return isJoin;
+    }
+
+    public void setJoin(Boolean join) {
+        isJoin = join;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

@@ -4,13 +4,13 @@ import com.treasure.hunt.common.Constant;
 import com.treasure.hunt.common.ListBeanUtil;
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.PageSort;
-import com.treasure.hunt.dao.ActivityDao;
-import com.treasure.hunt.dao.ActivityImageDao;
+import com.treasure.hunt.dao.*;
 import com.treasure.hunt.dto.ActivityDto;
-import com.treasure.hunt.entity.Activity;
+import com.treasure.hunt.entity.*;
 import com.treasure.hunt.framework.database.Criteria;
 import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
+import com.treasure.hunt.service.ActivityLikeService;
 import com.treasure.hunt.service.ActivityService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -38,6 +39,18 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     private ActivityImageDao activityImageDao;
+
+    @Autowired
+    private ActivityLikeDao activityLikeDao;
+
+    @Autowired
+    private ActivityJoinDao activityJoinDao;
+
+    @Autowired
+    private ActivityLikeService activityLikeService;
+
+    @Autowired
+    private ActivityTypeDao activityTypeDao;
 
     /**
      * 新增寻宝活动
@@ -96,7 +109,63 @@ public class ActivityServiceImpl implements ActivityService {
         List<Activity> domainList = page.getContent();
         List<ActivityDto> activityDtos = ListBeanUtil.listCopy(domainList, ActivityDto.class);
 
+        // TODO 评论数，点赞数
+        List<Long> activityIds = ListBeanUtil.toList(activityDtos, "id");
+        Map<Long, Long> likeMap = activityLikeService.groupByActivityId(activityIds);
+
+        List<Long> typeIds = ListBeanUtil.toList(activityDtos, "typeId");
+        List<ActivityType> activityTypes = activityTypeDao.findByIdIn(typeIds);
+        Map<Long, ActivityType> activityTypeMap = ListBeanUtil.toMap(activityTypes, "id");
+
+        for (ActivityDto activityDto1 : activityDtos) {
+            Long likeNum = likeMap.get(activityDto1.getId());
+            if (likeNum != null) {
+                activityDto1.setLikeNum(likeNum);
+            }
+            ActivityType activityType = activityTypeMap.get(activityDto1.getTypeId());
+            if (activityType != null) {
+                activityDto1.setTypeName(activityType.getName());
+            }
+        }
+
+
         return new PageList(activityDtos, page.getTotalElements(), page.getTotalPages());
+    }
+
+    /**
+     * 获取活动信息
+     *
+     * @param activityId 活动Id
+     * @param customerId 用户Id
+     * @return 活动信息
+     * @throws BusinessException
+     */
+    @Override
+    public ActivityDto getActivity(Long activityId, Long customerId) throws BusinessException {
+        Optional<Activity> activity = activityDao.findById(activityId);
+        if (!activity.isPresent()) {
+            throw new BusinessException("找不到id：" + activityId + "的活动");
+        }
+        ActivityDto activityDto = new ActivityDto();
+        ListBeanUtil.copyProperties(activity, activityDto);
+        Optional<ActivityType> activityType = activityTypeDao.findById(activityDto.getTypeId());
+        activityType.ifPresent(activityType1 -> activityDto.setTypeName(activityType1.getName()));
+
+        // 获取活动图片
+        List<ActivityImage> imageList = activityImageDao.findByActivityId(activityId);
+        activityDto.setImageList(imageList);
+        // 获取是否点赞
+        ActivityLike activityLike = activityLikeDao.findByCustomerIdAndActivityId(customerId, activityId);
+        if (activityLike != null) {
+            activityDto.setLike(true);
+        }
+        // 获取是否加入
+        ActivityJoin activityJoin = activityJoinDao.findByCustomerIdAndActivityId(customerId, activityId);
+        if (activityJoin != null) {
+            activityDto.setJoin(true);
+        }
+
+        return activityDto;
     }
 
     /**
@@ -106,12 +175,15 @@ public class ActivityServiceImpl implements ActivityService {
      * @Date 2018/4/17 9:39
      **/
     private Criteria<Activity> queryCondition(ActivityDto activityDto) {
-        Criteria<Activity> criteria = new Criteria<Activity>();
+        Criteria<Activity> criteria = new Criteria<>();
         if (activityDto.getTypeId() != null) {
             criteria.add(Restrictions.eq("typeId", activityDto.getTypeId(), true));
         }
         if (StringUtils.isNotBlank(activityDto.getTitle())) {
             criteria.add(Restrictions.like("title", "%" + activityDto.getTitle() + "%", true));
+        }
+        if (activityDto.getCustomerId() != null) {
+            criteria.add(Restrictions.eq("customerId", activityDto.getCustomerId(), true));
         }
         return criteria;
     }

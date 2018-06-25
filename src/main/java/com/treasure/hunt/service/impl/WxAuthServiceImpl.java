@@ -73,8 +73,8 @@ public class WxAuthServiceImpl implements WxAuthService {
             throw new BusinessException("授权登入失败，失败原因：解密失败");
         }
         WxCustomer wxCustomer = JSON.parseObject(customerStr, WxCustomer.class);
-        if (StringUtils.isBlank(wxCustomer.getUnionId())) {
-            throw new BusinessException("授权登入失败，失败原因：获取unionId失败");
+        if (StringUtils.isBlank(wxCustomer.getOpenId())) {
+            throw new BusinessException("授权登入失败，失败原因：获取openId失败");
         }
         WxCustomer customer = addOrUpdateCustomer(wxCustomer);
         if (customer == null) {
@@ -84,9 +84,9 @@ public class WxAuthServiceImpl implements WxAuthService {
     }
 
     public WxCustomer addOrUpdateCustomer(WxCustomer wxCustomer) {
-        // 先用unionId去获取用户
-        if (StringUtils.isNotBlank(wxCustomer.getUnionId())) {
-            WxCustomer customer = wxCustomerDao.findByUnionId(wxCustomer.getUnionId());
+        // 先用Open去获取用户
+        if (StringUtils.isNotBlank(wxCustomer.getOpenId())) {
+            WxCustomer customer = wxCustomerDao.findByOpenId(wxCustomer.getOpenId());
 
             // 如果该用户不存在，新增用户
             if (customer == null) {

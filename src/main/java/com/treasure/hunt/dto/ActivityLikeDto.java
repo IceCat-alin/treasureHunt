@@ -1,9 +1,5 @@
-package com.treasure.hunt.entity;
+package com.treasure.hunt.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,17 +9,24 @@ import java.util.Date;
  * @Date 创建时间：2018/6/19 11:10
  * @Version 版本号：v1.0.0
  */
-@Entity
-public class ActivityLike implements Serializable {
+public class ActivityLikeDto implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
      * 点赞用户id
      */
     private Long customerId;
+
+    /**
+     * 点赞用户昵称
+     */
+    private String customerName;
+
+    /**
+     * 点赞用户头像
+     */
+    private String customerImg;
 
     /**
      * 活动id
@@ -78,5 +81,21 @@ public class ActivityLike implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerImg() {
+        return customerImg;
+    }
+
+    public void setCustomerImg(String customerImg) {
+        this.customerImg = customerImg;
     }
 }

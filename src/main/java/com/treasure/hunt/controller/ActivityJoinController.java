@@ -1,10 +1,13 @@
 package com.treasure.hunt.controller;
 
+import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.ResultInfo;
+import com.treasure.hunt.dto.ActivityJoinDto;
 import com.treasure.hunt.framework.exception.BusinessException;
-import com.treasure.hunt.service.ActivityLikeService;
+import com.treasure.hunt.service.ActivityJoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -15,24 +18,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @Version 版本号：v1.0.0
  */
 @Controller
-@RequestMapping("/activity/like")
-public class ActivityLikeController {
+@RequestMapping("/activity/join")
+public class ActivityJoinController {
 
     @Autowired
-    private ActivityLikeService activityLikeService;
+    private ActivityJoinService activityJoinService;
 
 
     /**
      * 点赞/取消点赞
+     *
      * @param activityId
      * @param customerId
      * @return
      * @throws BusinessException
      */
-    @RequestMapping("/likeActivity")
+    @RequestMapping("/joinActivity")
     @ResponseBody
-    public ResultInfo likeActivity(Long activityId, Long customerId) throws BusinessException {
-        activityLikeService.likeActivity(activityId, customerId);
-        return ResultInfo.success("审核通过", null);
+    public ResultInfo joinActivity(Long activityId, Long customerId) throws BusinessException {
+        activityJoinService.joinActivity(activityId, customerId);
+        return ResultInfo.success("加入成功", null);
+    }
+
+    /**
+     * 获取加入列表
+     *
+     * @param pageNo
+     * @param pageSize
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/getActivityJoinPage")
+    @ResponseBody
+    public ResultInfo getActivityLikePage(@RequestBody Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
+        PageList<ActivityJoinDto> activityPageList = activityJoinService.getActivityJoinPage(pageNo, pageSize, activityId);
+        return ResultInfo.success("分页查询活动成功", activityPageList);
     }
 }
