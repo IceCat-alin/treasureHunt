@@ -1,6 +1,8 @@
 package com.treasure.hunt.service;
 
+import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.dto.CommentDto;
+import com.treasure.hunt.framework.exception.BusinessException;
 
 /**
  * @Description 类描述：
@@ -10,5 +12,9 @@ import com.treasure.hunt.dto.CommentDto;
  */
 public interface CommentService {
 
-    void addComment(CommentDto commentDto);
+    void addComment(CommentDto commentDto) throws BusinessException;
+
+    PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException;
+
+    void setBestComment(Long commentId) throws BusinessException;
 }

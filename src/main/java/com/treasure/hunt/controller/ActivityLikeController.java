@@ -50,8 +50,8 @@ public class ActivityLikeController {
      */
     @RequestMapping("/getActivityLikePage")
     @ResponseBody
-    public ResultInfo getActivityLikePage(@RequestBody Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
-        PageList<ActivityLikeDto> activityPageList = activityLikeService.getActivityLikePage(pageNo, pageSize, activityId);
-        return ResultInfo.success("分页查询活动成功", activityPageList);
+    public ResultInfo getActivityLikePage( Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
+        PageList<ActivityLikeDto> activityLikePage = activityLikeService.getActivityLikePage(pageNo, pageSize, activityId);
+        return ResultInfo.success("分页查询活动点赞成功", activityLikePage);
     }
 }

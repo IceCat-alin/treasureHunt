@@ -1,9 +1,5 @@
 package com.treasure.hunt.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,6 +10,16 @@ import java.util.Date;
  * @Version 版本号：v1.0.0
  */
 public class CommentDto implements Serializable {
+
+    /**
+     * 最佳
+     */
+    public static final Byte BEST_TRUE = 1;
+
+    /**
+     * 非最佳
+     */
+    public static final Byte BEST_FALSE = 0;
 
     private Long id;
 
@@ -56,6 +62,11 @@ public class CommentDto implements Serializable {
      * 评论内容
      */
     private String content;
+
+    /**
+     * 是否最佳
+     */
+    private Byte isBest;
 
     /**
      * 创建时间
@@ -153,5 +164,13 @@ public class CommentDto implements Serializable {
 
     public void setToCustomerName(String toCustomerName) {
         this.toCustomerName = toCustomerName;
+    }
+
+    public Byte getIsBest() {
+        return isBest;
+    }
+
+    public void setIsBest(Byte isBest) {
+        this.isBest = isBest;
     }
 }

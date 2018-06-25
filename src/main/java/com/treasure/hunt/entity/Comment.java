@@ -46,6 +46,11 @@ public class Comment implements Serializable {
     private String content;
 
     /**
+     * 是否最佳
+     */
+    private Byte isBest;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -117,5 +122,13 @@ public class Comment implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Byte getIsBest() {
+        return isBest;
+    }
+
+    public void setIsBest(Byte isBest) {
+        this.isBest = isBest;
     }
 }

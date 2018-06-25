@@ -28,7 +28,7 @@ public class ActivityLikeTests {
         List<Long> activityIds = new ArrayList<>();
         activityIds.add(1L);
         activityIds.add(2L);
-        activityLikeService.test(activityIds);
+        activityLikeService.groupByActivityId(activityIds);
     }
 
 }
