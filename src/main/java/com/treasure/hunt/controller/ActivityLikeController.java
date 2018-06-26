@@ -37,7 +37,7 @@ public class ActivityLikeController {
     @ResponseBody
     public ResultInfo likeActivity(Long activityId, Long customerId) throws BusinessException {
         activityLikeService.likeActivity(activityId, customerId);
-        return ResultInfo.success("点赞成功", null);
+        return ResultInfo.success("点赞/取消点赞成功", null);
     }
 
     /**

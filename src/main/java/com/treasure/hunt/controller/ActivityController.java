@@ -3,7 +3,6 @@ package com.treasure.hunt.controller;
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.ResultInfo;
 import com.treasure.hunt.dto.ActivityDto;
-import com.treasure.hunt.entity.User;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +40,9 @@ public class ActivityController {
 
     /**
      * 审核活动
+     *
      * @param activityId 活动Id
-     * @param status 状态
+     * @param status     状态
      * @return 审核结果
      * @throws BusinessException
      */
@@ -55,6 +55,7 @@ public class ActivityController {
 
     /**
      * 分页查询活动
+     *
      * @param pageNo
      * @param pageSize
      * @param sort
@@ -72,6 +73,7 @@ public class ActivityController {
 
 
     /**
+     * 获取活动信息
      *
      * @param activityId 活动
      * @param customerId 用户
@@ -80,8 +82,8 @@ public class ActivityController {
      */
     @RequestMapping("/getActivity")
     @ResponseBody
-    public ResultInfo getActivity(Long activityId,Long customerId) throws BusinessException {
-        return ResultInfo.success("获取活动成功", activityService.getActivity(activityId,customerId));
+    public ResultInfo getActivity(Long activityId, Long customerId) throws BusinessException {
+        return ResultInfo.success("获取活动成功", activityService.getActivity(activityId, customerId));
     }
 
 }

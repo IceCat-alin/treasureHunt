@@ -26,6 +26,11 @@ public class ActivityImage implements Serializable {
     private Long activityId;
 
     /**
+     * 图片url
+     */
+    private String imageUrl;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -65,5 +70,13 @@ public class ActivityImage implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

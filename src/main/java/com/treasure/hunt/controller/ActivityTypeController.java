@@ -27,6 +27,6 @@ public class ActivityTypeController {
     @RequestMapping("/getTypeList")
     @ResponseBody
     public ResultInfo getTypeList() {
-        return ResultInfo.success("获取类型列表成功成功", activityTypeService.getTypeList());
+        return ResultInfo.success("获取类型列表成功", activityTypeService.getTypeList());
     }
 }

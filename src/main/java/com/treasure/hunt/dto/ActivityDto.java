@@ -13,6 +13,15 @@ import java.util.List;
  * @Version 版本号：v1.0.0
  */
 public class ActivityDto implements Serializable {
+
+    /**
+     * 审核中
+     */
+    public static final Byte STATUS_AUDIT = 0;
+
+    /**
+     * id
+     */
     private Long id;
 
     /**

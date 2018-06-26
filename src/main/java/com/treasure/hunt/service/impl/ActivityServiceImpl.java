@@ -19,10 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @Description 类描述：
@@ -62,10 +59,21 @@ public class ActivityServiceImpl implements ActivityService {
     public void addActivity(ActivityDto activityDto) throws BusinessException {
         Activity activity = new Activity();
         ListBeanUtil.copyProperties(activityDto, activity);
-        if (activityDto.getImageList() != null && !activityDto.getImageList().isEmpty()) {
-            activityImageDao.saveAll(activityDto.getImageList());
+        activity.setStatus(ActivityDto.STATUS_AUDIT);
+        activity =  activityDao.save(activity);
+
+        if (activityDto.getImages() != null && activityDto.getImages().length > 0) {
+            List<ActivityImage> imageList = new ArrayList<>();
+            for (int i = 0; i < activityDto.getImages().length; i++) {
+                ActivityImage activityImage = new ActivityImage();
+                activityImage.setUpdateTime(new Date());
+                activityImage.setCreateTime(new Date());
+                activityImage.setActivityId(activity.getId());
+                activityImage.setImageUrl(activityDto.getImages()[i]);
+                imageList.add(activityImage);
+            }
+            activityImageDao.saveAll(imageList);
         }
-        activityDao.save(activity);
     }
 
     /**

@@ -26,7 +26,7 @@ public class ActivityJoinController {
 
 
     /**
-     * 点赞/取消点赞
+     * 加入活动
      *
      * @param activityId
      * @param customerId
@@ -52,6 +52,6 @@ public class ActivityJoinController {
     @ResponseBody
     public ResultInfo getActivityLikePage(@RequestBody Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
         PageList<ActivityJoinDto> activityPageList = activityJoinService.getActivityJoinPage(pageNo, pageSize, activityId);
-        return ResultInfo.success("分页查询活动成功", activityPageList);
+        return ResultInfo.success("分页查询加入活动用户成功", activityPageList);
     }
 }
