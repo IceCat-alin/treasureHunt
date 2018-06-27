@@ -66,7 +66,7 @@ public class ActivityController {
      */
     @RequestMapping("/getActivityPage")
     @ResponseBody
-    public ResultInfo getActivityPage(@RequestBody Integer pageNo, Integer pageSize, String sort, String sortField, ActivityDto activityDto) throws BusinessException {
+    public ResultInfo getActivityPage(Integer pageNo, Integer pageSize, String sort, String sortField, ActivityDto activityDto) throws BusinessException {
         PageList<ActivityDto> activityPageList = activityService.getActivityPage(pageNo, pageSize, sort, sortField, activityDto);
         return ResultInfo.success("分页查询活动成功", activityPageList);
     }

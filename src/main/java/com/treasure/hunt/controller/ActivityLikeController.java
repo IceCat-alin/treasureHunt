@@ -7,7 +7,6 @@ import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityLikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -50,7 +49,7 @@ public class ActivityLikeController {
      */
     @RequestMapping("/getActivityLikePage")
     @ResponseBody
-    public ResultInfo getActivityLikePage( Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
+    public ResultInfo getActivityLikePage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
         PageList<ActivityLikeDto> activityLikePage = activityLikeService.getActivityLikePage(pageNo, pageSize, activityId);
         return ResultInfo.success("分页查询活动点赞成功", activityLikePage);
     }

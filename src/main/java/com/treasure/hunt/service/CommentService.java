@@ -4,6 +4,9 @@ import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.dto.CommentDto;
 import com.treasure.hunt.framework.exception.BusinessException;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Description 类描述：
  * @Author 创建人：linying
@@ -17,4 +20,6 @@ public interface CommentService {
     PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException;
 
     void setBestComment(Long commentId) throws BusinessException;
+
+    Map<Long, Long> groupByActivityId(List<Long> activityIds);
 }

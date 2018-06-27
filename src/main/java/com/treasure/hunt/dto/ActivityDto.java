@@ -117,12 +117,17 @@ public class ActivityDto implements Serializable {
     /**
      * 点赞人数
      */
-    private Long likeNum;
+    private Long likeNum = 0L;
+
+    /**
+     * 评论人数
+     */
+    private Long commentNum = 0L;
 
     /**
      * 加入人数
      */
-    private Long joinNum;
+    private Long joinNum = 0L;
 
 
     public Long getId() {
@@ -291,5 +296,13 @@ public class ActivityDto implements Serializable {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    public Long getCommentNum() {
+        return commentNum;
+    }
+
+    public void setCommentNum(Long commentNum) {
+        this.commentNum = commentNum;
     }
 }

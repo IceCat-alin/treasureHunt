@@ -19,10 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @Description 类描述：
@@ -32,7 +29,7 @@ import java.util.Optional;
  */
 @Service("commentService")
 @Transactional(rollbackFor = Exception.class)
-public class CmmentServiceImpl implements CommentService {
+public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentDao commentDao;
@@ -119,5 +116,23 @@ public class CmmentServiceImpl implements CommentService {
             throw new BusinessException("找不到id：" + comment.get().getCustomerId() + "的用户");
         }
         wxCustomer.get().setIntegral(wxCustomer.get().getIntegral() + 1);
+    }
+
+    /**
+     * 分组统计每个活动评论数
+     *
+     * @param activityIds
+     * @return
+     */
+    @Override
+    public Map<Long, Long> groupByActivityId(List<Long> activityIds) {
+        List<Object[]> list = commentDao.groupByActivityId(activityIds);
+        Map<Long, Long> map = new HashMap<>(16);
+
+        for (Object[] objects : list) {
+            System.out.println(objects[0]);
+            map.put(Long.parseLong(objects[0].toString()), Long.parseLong(objects[1].toString()));
+        }
+        return map;
     }
 }

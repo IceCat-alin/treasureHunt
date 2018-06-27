@@ -74,5 +74,17 @@ public class Constant {
      */
     public static final String WX_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
+    /**
+     * 七牛access_key
+     */
+    public static final String QN_ACCESS_KEY = "3ukGhgGA2AYTYiB2dHgfkdcslIzJvp8YXRxcK7Uq";
+    /**
+     * 七牛secret_key
+     */
+    public static final String QN_SECRET_KEY = "0XmNe205aupewckEuQNgWxvxznqKjpa4oxyK-lnR";
+    /**
+     * 七牛bucket
+     */
+    public static final String QN_BUCKET = "snjxb";
 
 }

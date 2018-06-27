@@ -1,5 +1,6 @@
 package com.treasure.hunt.config;
 
+import com.treasure.hunt.framework.utils.IpUtil;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class WebConfiguration {
                 throws IOException, ServletException {
             // TODO Auto-generated method stub
             HttpServletRequest request = (HttpServletRequest) servletRequest;
+            LOG.info("####请求Ip:" + IpUtil.getIpAddr(request));
             LOG.info("####请求url:" + request.getRequestURI());
             filterChain.doFilter(servletRequest, servletResponse);
         }

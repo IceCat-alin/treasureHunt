@@ -12,6 +12,7 @@ import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityLikeService;
 import com.treasure.hunt.service.ActivityService;
+import com.treasure.hunt.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,9 @@ public class ActivityServiceImpl implements ActivityService {
     private ActivityLikeService activityLikeService;
 
     @Autowired
+    private CommentService commentService;
+
+    @Autowired
     private ActivityTypeDao activityTypeDao;
 
     /**
@@ -60,7 +64,9 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activity = new Activity();
         ListBeanUtil.copyProperties(activityDto, activity);
         activity.setStatus(ActivityDto.STATUS_AUDIT);
-        activity =  activityDao.save(activity);
+        activity.setUpdateTime(new Date());
+        activity.setCreateTime(new Date());
+        activity = activityDao.save(activity);
 
         if (activityDto.getImages() != null && activityDto.getImages().length > 0) {
             List<ActivityImage> imageList = new ArrayList<>();
@@ -117,22 +123,34 @@ public class ActivityServiceImpl implements ActivityService {
         List<Activity> domainList = page.getContent();
         List<ActivityDto> activityDtos = ListBeanUtil.listCopy(domainList, ActivityDto.class);
 
-        // TODO 评论数，点赞数
+        //  评论数，点赞数
         List<Long> activityIds = ListBeanUtil.toList(activityDtos, "id");
         Map<Long, Long> likeMap = activityLikeService.groupByActivityId(activityIds);
+        Map<Long, Long> commentMap = commentService.groupByActivityId(activityIds);
 
         List<Long> typeIds = ListBeanUtil.toList(activityDtos, "typeId");
         List<ActivityType> activityTypes = activityTypeDao.findByIdIn(typeIds);
         Map<Long, ActivityType> activityTypeMap = ListBeanUtil.toMap(activityTypes, "id");
+
+        List<ActivityImage> activityImages = activityImageDao.findByActivityIdIn(activityIds);
+        Map<Long, List<ActivityImage>> imageMap = ListBeanUtil.toMapList(activityImages, activityIds, "activityId");
 
         for (ActivityDto activityDto1 : activityDtos) {
             Long likeNum = likeMap.get(activityDto1.getId());
             if (likeNum != null) {
                 activityDto1.setLikeNum(likeNum);
             }
+            Long commentNum = commentMap.get(activityDto1.getId());
+            if (commentNum != null) {
+                activityDto1.setCommentNum(commentNum);
+            }
             ActivityType activityType = activityTypeMap.get(activityDto1.getTypeId());
             if (activityType != null) {
                 activityDto1.setTypeName(activityType.getName());
+            }
+            List<ActivityImage> activityImageList = imageMap.get(activityDto1.getId());
+            if (activityImageList != null && !activityImageList.isEmpty()) {
+                activityDto1.setImageList(activityImageList);
             }
         }
 
