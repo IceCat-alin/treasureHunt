@@ -7,7 +7,6 @@ import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -33,7 +32,7 @@ public class ActivityController {
      */
     @RequestMapping("/addActivity")
     @ResponseBody
-    public ResultInfo addActivity(@RequestBody ActivityDto activityDto) throws BusinessException {
+    public ResultInfo addActivity(ActivityDto activityDto) throws BusinessException {
         activityService.addActivity(activityDto);
         return ResultInfo.success("发起活动成功，请等待审核", null);
     }
@@ -64,7 +63,7 @@ public class ActivityController {
      * @return
      * @throws BusinessException
      */
-    @RequestMapping("/getActivityPage")
+    @RequestMapping(value = "/getActivityPage")
     @ResponseBody
     public ResultInfo getActivityPage(Integer pageNo, Integer pageSize, String sort, String sortField, ActivityDto activityDto) throws BusinessException {
         PageList<ActivityDto> activityPageList = activityService.getActivityPage(pageNo, pageSize, sort, sortField, activityDto);

@@ -5,7 +5,6 @@ import com.treasure.hunt.entity.User;
 import com.treasure.hunt.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,7 +36,7 @@ public class IndexController {
      */
     @RequestMapping(value = "/login")
     @ResponseBody
-    public ResultInfo login(@RequestBody User user) {
+    public ResultInfo login(User user) {
         user = userInfoService.findByUserNameAndPassword(user);
         if (user != null) {
             return ResultInfo.resultInfo(ResultInfo.CODE_SUCCESS, "登入成功", null);

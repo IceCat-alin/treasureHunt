@@ -6,7 +6,6 @@ import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.WxAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -17,16 +16,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @Version 版本号：v1.0.0
  */
 @Controller
+@RequestMapping("/app")
 public class WxAuthController {
 
     @Autowired
     private WxAuthService wxAuthService;
 
-    @RequestMapping("/app/auth")
+    @RequestMapping("/auth")
     @ResponseBody
-    public ResultInfo getUserPage(String code, String encryptedData, String iv) throws BusinessException {
+    public ResultInfo auth(String code, String encryptedData, String iv) throws BusinessException {
 
-        WxCustomer wxCustomer = wxAuthService.auth(code,encryptedData,iv);
+        WxCustomer wxCustomer = wxAuthService.auth(code, encryptedData, iv);
 
         return ResultInfo.success("授权登入成功", wxCustomer);
     }

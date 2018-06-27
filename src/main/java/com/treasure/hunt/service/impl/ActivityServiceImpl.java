@@ -173,7 +173,7 @@ public class ActivityServiceImpl implements ActivityService {
             throw new BusinessException("找不到id：" + activityId + "的活动");
         }
         ActivityDto activityDto = new ActivityDto();
-        ListBeanUtil.copyProperties(activity, activityDto);
+        ListBeanUtil.copyProperties(activity.get(), activityDto);
         Optional<ActivityType> activityType = activityTypeDao.findById(activityDto.getTypeId());
         activityType.ifPresent(activityType1 -> activityDto.setTypeName(activityType1.getName()));
 
