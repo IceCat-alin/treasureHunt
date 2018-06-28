@@ -52,21 +52,6 @@ public class Activity implements Serializable {
     private String qrCode;
 
     /**
-     * 真实姓名
-     */
-    private String realName;
-
-    /**
-     * 联系方式:1微信号，2QQ号，3手机
-     */
-    private Byte contactType;
-
-    /**
-     * 号码
-     */
-    private String contactNumber;
-
-    /**
      * 活动状态：0审核中，1进行中，2活动结束
      */
     private Byte status;
@@ -143,30 +128,6 @@ public class Activity implements Serializable {
 
     public void setQrCode(String qrCode) {
         this.qrCode = qrCode;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public Byte getContactType() {
-        return contactType;
-    }
-
-    public void setContactType(Byte contactType) {
-        this.contactType = contactType;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
     }
 
     public Byte getStatus() {

@@ -122,35 +122,36 @@ public class ActivityServiceImpl implements ActivityService {
 
         List<Activity> domainList = page.getContent();
         List<ActivityDto> activityDtos = ListBeanUtil.listCopy(domainList, ActivityDto.class);
+        if (activityDtos != null && !activityDtos.isEmpty()) {
+            //  评论数，点赞数
+            List<Long> activityIds = ListBeanUtil.toList(activityDtos, "id");
+            Map<Long, Long> likeMap = activityLikeService.groupByActivityId(activityIds);
+            Map<Long, Long> commentMap = commentService.groupByActivityId(activityIds);
 
-        //  评论数，点赞数
-        List<Long> activityIds = ListBeanUtil.toList(activityDtos, "id");
-        Map<Long, Long> likeMap = activityLikeService.groupByActivityId(activityIds);
-        Map<Long, Long> commentMap = commentService.groupByActivityId(activityIds);
+            List<Long> typeIds = ListBeanUtil.toList(activityDtos, "typeId");
+            List<ActivityType> activityTypes = activityTypeDao.findByIdIn(typeIds);
+            Map<Long, ActivityType> activityTypeMap = ListBeanUtil.toMap(activityTypes, "id");
 
-        List<Long> typeIds = ListBeanUtil.toList(activityDtos, "typeId");
-        List<ActivityType> activityTypes = activityTypeDao.findByIdIn(typeIds);
-        Map<Long, ActivityType> activityTypeMap = ListBeanUtil.toMap(activityTypes, "id");
+            List<ActivityImage> activityImages = activityImageDao.findByActivityIdIn(activityIds);
+            Map<Long, List<ActivityImage>> imageMap = ListBeanUtil.toMapList(activityImages, activityIds, "activityId");
 
-        List<ActivityImage> activityImages = activityImageDao.findByActivityIdIn(activityIds);
-        Map<Long, List<ActivityImage>> imageMap = ListBeanUtil.toMapList(activityImages, activityIds, "activityId");
-
-        for (ActivityDto activityDto1 : activityDtos) {
-            Long likeNum = likeMap.get(activityDto1.getId());
-            if (likeNum != null) {
-                activityDto1.setLikeNum(likeNum);
-            }
-            Long commentNum = commentMap.get(activityDto1.getId());
-            if (commentNum != null) {
-                activityDto1.setCommentNum(commentNum);
-            }
-            ActivityType activityType = activityTypeMap.get(activityDto1.getTypeId());
-            if (activityType != null) {
-                activityDto1.setTypeName(activityType.getName());
-            }
-            List<ActivityImage> activityImageList = imageMap.get(activityDto1.getId());
-            if (activityImageList != null && !activityImageList.isEmpty()) {
-                activityDto1.setImageList(activityImageList);
+            for (ActivityDto activityDto1 : activityDtos) {
+                Long likeNum = likeMap.get(activityDto1.getId());
+                if (likeNum != null) {
+                    activityDto1.setLikeNum(likeNum);
+                }
+                Long commentNum = commentMap.get(activityDto1.getId());
+                if (commentNum != null) {
+                    activityDto1.setCommentNum(commentNum);
+                }
+                ActivityType activityType = activityTypeMap.get(activityDto1.getTypeId());
+                if (activityType != null) {
+                    activityDto1.setTypeName(activityType.getName());
+                }
+                List<ActivityImage> activityImageList = imageMap.get(activityDto1.getId());
+                if (activityImageList != null && !activityImageList.isEmpty()) {
+                    activityDto1.setImageList(activityImageList);
+                }
             }
         }
 
@@ -210,6 +211,9 @@ public class ActivityServiceImpl implements ActivityService {
         }
         if (activityDto.getCustomerId() != null) {
             criteria.add(Restrictions.eq("customerId", activityDto.getCustomerId(), true));
+        }
+        if (activityDto.getStatus() != null) {
+            criteria.add(Restrictions.eq("status", activityDto.getStatus(), true));
         }
         return criteria;
     }
