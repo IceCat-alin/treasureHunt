@@ -51,57 +51,47 @@ public class ResultInfo implements Serializable {
     private Object data;
 
     /**
+     * @param msg
+     * @return
      * @description 成功
      * @author linying
      * @date 2018-04-12 14:52:25
-     * @param msg
-     * @return
      */
     public static ResultInfo success(String msg) {
-        ResultInfo success = new ResultInfo();
-        success.setCode(CODE_SUCCESS);
-        success.setMsg(msg);
-        return success;
+        return success(msg, null);
     }
 
     /**
+     * @param msg  返回消息
+     * @param data 返回数据
+     * @return
      * @description 成功
      * @author linying
      * @date 2018-04-12 14:52:42
-     * @param msg 返回消息
-     * @param data 返回数据
-     * @return
      */
     public static ResultInfo success(String msg, Object data) {
-        ResultInfo success = new ResultInfo();
-        success.setCode(CODE_SUCCESS);
-        success.setMsg(msg);
-        success.setData(data);
-        return success;
+        return resultInfo(CODE_SUCCESS, msg, data);
     }
 
     /**
+     * @param msg 失败返回消息
+     * @return
      * @description 失败
      * @author linying
      * @date 2018-04-12 14:53:31
-     * @param msg 失败返回消息
-     * @return
      */
     public static ResultInfo failure(String msg) {
-        ResultInfo failure = new ResultInfo();
-        failure.setCode(CODE_FAILURE);
-        failure.setMsg(msg);
-        return failure;
+        return resultInfo(CODE_FAILURE, msg, null);
     }
 
     /**
-     * @description 自定义返回结果
-     * @author linying
-     * @date 2018-04-12 14:53:54
      * @param code
      * @param msg
      * @param data
      * @return
+     * @description 自定义返回结果
+     * @author linying
+     * @date 2018-04-12 14:53:54
      */
     public static ResultInfo resultInfo(int code, String msg, Object data) {
         ResultInfo resultInfo = new ResultInfo();

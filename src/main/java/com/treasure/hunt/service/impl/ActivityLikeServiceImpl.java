@@ -13,6 +13,7 @@ import com.treasure.hunt.framework.database.Criteria;
 import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityLikeService;
+import com.treasure.hunt.service.ActivityStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,11 +41,15 @@ public class ActivityLikeServiceImpl implements ActivityLikeService {
     @Autowired
     private WxCustomerDao wxCustomerDao;
 
+    @Autowired
+    private ActivityStatisticsService activityStatisticsService;
+
     @Override
     public void likeActivity(Long activityId, Long customerId) {
         ActivityLike activityLike = activityLikeDao.findByCustomerIdAndActivityId(customerId, activityId);
         if (activityLike != null) {
             activityLikeDao.delete(activityLike);
+            activityStatisticsService.updateStatistics(activityId, "like", "sub");
         } else {
             activityLike = new ActivityLike();
             activityLike.setActivityId(activityId);
@@ -52,6 +57,7 @@ public class ActivityLikeServiceImpl implements ActivityLikeService {
             activityLike.setCreateTime(new Date());
             activityLike.setUpdateTime(new Date());
             activityLikeDao.save(activityLike);
+            activityStatisticsService.updateStatistics(activityId, "like", "add");
         }
     }
 

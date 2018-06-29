@@ -2,6 +2,7 @@ package com.treasure.hunt.controller;
 
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.ResultInfo;
+import com.treasure.hunt.dto.ActivityDto;
 import com.treasure.hunt.dto.ActivityJoinDto;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityJoinService;
@@ -52,5 +53,21 @@ public class ActivityJoinController {
     public ResultInfo getActivityLikePage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
         PageList<ActivityJoinDto> activityPageList = activityJoinService.getActivityJoinPage(pageNo, pageSize, activityId);
         return ResultInfo.success("分页查询加入活动用户成功", activityPageList);
+    }
+
+    /**
+     * 获取我的加入
+     *
+     * @param pageNo
+     * @param pageSize
+     * @param customerId
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/getMyJoin")
+    @ResponseBody
+    public ResultInfo getMyJoin(Integer pageNo, Integer pageSize, Long customerId) throws BusinessException {
+        PageList<ActivityDto> activityPageList = activityJoinService.getMyJoin(pageNo, pageSize, customerId);
+        return ResultInfo.success("分页查询我加入的活动成功", activityPageList);
     }
 }

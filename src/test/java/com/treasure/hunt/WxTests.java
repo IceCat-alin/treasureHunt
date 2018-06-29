@@ -5,6 +5,7 @@ import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.entity.User;
 import com.treasure.hunt.service.ActivityLikeService;
 import com.treasure.hunt.service.UserInfoService;
+import com.treasure.hunt.service.WxAuthService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +19,14 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class ActivityLikeTests {
+public class WxTests {
 
     @Autowired
-    ActivityLikeService activityLikeService;
+    WxAuthService wxAuthService;
 
     @Test
     public void getUserPageTest() {
-        List<Long> activityIds = new ArrayList<>();
-        activityIds.add(1L);
-        activityIds.add(2L);
-        activityLikeService.groupByActivityId(activityIds);
+//        wxAuthService.getQrCode("pages/detail/detail?activityId=12&customerId=2");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.treasure.hunt.dao;
 
+import com.treasure.hunt.entity.ActivityImage;
 import com.treasure.hunt.entity.ActivityLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -33,4 +34,12 @@ public interface ActivityLikeDao extends JpaRepository<ActivityLike, Long>, JpaS
      */
     @Query("select activityId, count(*) from ActivityLike where activityId in :activityIds group by activityId")
     List<Object[]> groupByActivityId(@Param("activityIds") List<Long> activityIds);
+
+    /**
+     * 根据活动获取点赞
+     * @param activityId
+     * @return
+     */
+    List<ActivityLike> findByActivityId(Long activityId);
+
 }

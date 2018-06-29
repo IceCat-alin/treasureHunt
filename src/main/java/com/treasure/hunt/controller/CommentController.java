@@ -68,4 +68,17 @@ public class CommentController {
         return ResultInfo.success("新增评论成功", null);
     }
 
+    /**
+     * 删除评论
+     *
+     * @param commentId
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/deleteComment")
+    @ResponseBody
+    public ResultInfo deleteComment(Long commentId) throws BusinessException {
+        commentService.deleteComment(commentId);
+        return ResultInfo.success("删除评论成功", null);
+    }
 }

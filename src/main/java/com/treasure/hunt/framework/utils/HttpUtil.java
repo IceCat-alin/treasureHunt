@@ -185,4 +185,35 @@ public class HttpUtil {
         }
     }
 
+
+    /**
+     * @param url  url
+     * @param json json请求参数
+     * @return String
+     * @throws Exception 异常
+     * @description post请求 json
+     */
+    public static byte[] postJson2(String url, String json) throws Exception {
+        HttpResponse response = null;
+        try {
+            HttpPost post = new HttpPost(url);
+            StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
+            post.setEntity(stringEntity);
+            post.setHeader("Content-Type", "application/json");
+            response = HttpClients.createDefault().execute(post);
+            HttpEntity httpEntity = response.getEntity();
+            return EntityUtils.toByteArray(httpEntity);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new Exception("发送POST请求出现异常：" + e.getMessage(), e);
+        } finally {
+            if (response != null) {
+                try {
+                    EntityUtils.consume(response.getEntity());
+                } catch (IOException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        }
+    }
 }

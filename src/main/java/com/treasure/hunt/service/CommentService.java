@@ -22,4 +22,6 @@ public interface CommentService {
     void setBestComment(Long commentId) throws BusinessException;
 
     Map<Long, Long> groupByActivityId(List<Long> activityIds);
+
+    void deleteComment(Long commentId) throws BusinessException;
 }

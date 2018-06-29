@@ -4,15 +4,20 @@ import com.treasure.hunt.common.Constant;
 import com.treasure.hunt.common.ListBeanUtil;
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.PageSort;
+import com.treasure.hunt.dao.ActivityDao;
 import com.treasure.hunt.dao.ActivityJoinDao;
 import com.treasure.hunt.dao.WxCustomerDao;
+import com.treasure.hunt.dto.ActivityDto;
 import com.treasure.hunt.dto.ActivityJoinDto;
+import com.treasure.hunt.entity.Activity;
 import com.treasure.hunt.entity.ActivityJoin;
 import com.treasure.hunt.entity.WxCustomer;
 import com.treasure.hunt.framework.database.Criteria;
 import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityJoinService;
+import com.treasure.hunt.service.ActivityService;
+import com.treasure.hunt.service.ActivityStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,13 +42,23 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
     private ActivityJoinDao activityJoinDao;
 
     @Autowired
+    private ActivityDao activityDao;
+
+    @Autowired
     private WxCustomerDao wxCustomerDao;
+
+    @Autowired
+    private ActivityStatisticsService activityStatisticsService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @Override
     public void joinActivity(Long activityId, Long customerId) {
         ActivityJoin activityJoin = activityJoinDao.findByCustomerIdAndActivityId(customerId, activityId);
         if (activityJoin != null) {
             activityJoinDao.delete(activityJoin);
+            activityStatisticsService.updateStatistics(activityId, "join", "sub");
         } else {
             activityJoin = new ActivityJoin();
             activityJoin.setActivityId(activityId);
@@ -51,6 +66,7 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
             activityJoin.setCreateTime(new Date());
             activityJoin.setUpdateTime(new Date());
             activityJoinDao.save(activityJoin);
+            activityStatisticsService.updateStatistics(activityId, "join", "add");
         }
     }
 
@@ -82,4 +98,33 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
 
         return new PageList(activityLikeDtos, page.getTotalElements(), page.getTotalPages());
     }
+
+    /**
+     * 获取我的加入
+     *
+     * @param pageNo
+     * @param pageSize
+     * @param customerId
+     * @return
+     * @throws BusinessException
+     */
+    @Override
+    public PageList<ActivityDto> getMyJoin(Integer pageNo, Integer pageSize, Long customerId) throws BusinessException {
+        int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
+        int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
+        PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("DESC", "createTime"));
+
+        Criteria<ActivityJoin> criteria = new Criteria<>();
+        criteria.add(Restrictions.eq("customerId", customerId, true));
+
+        Page<ActivityJoin> page = activityJoinDao.findAll(criteria, pageable);
+        List<ActivityJoin> domainList = page.getContent();
+
+        List<Long> activityIds = ListBeanUtil.toList(domainList, "activityId");
+        List<Activity> wxCustomerList = activityDao.findByIdIn(activityIds);
+        List<ActivityDto> activityDtos = activityService.packData(wxCustomerList);
+
+        return new PageList(activityDtos, page.getTotalElements(), page.getTotalPages());
+    }
+
 }

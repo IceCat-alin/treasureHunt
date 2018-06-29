@@ -12,6 +12,7 @@ import com.treasure.hunt.entity.WxCustomer;
 import com.treasure.hunt.framework.database.Criteria;
 import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
+import com.treasure.hunt.service.ActivityStatisticsService;
 import com.treasure.hunt.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,9 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private WxCustomerDao wxCustomerDao;
 
+    @Autowired
+    private ActivityStatisticsService activityStatisticsService;
+
     /**
      * 新增评论
      *
@@ -51,6 +55,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreateTime(new Date());
         comment.setIsBest(CommentDto.BEST_FALSE);
         commentDao.save(comment);
+        activityStatisticsService.updateStatistics(commentDto.getActivityId(), "comment", "add");
     }
 
     /**
@@ -134,5 +139,21 @@ public class CommentServiceImpl implements CommentService {
             map.put(Long.parseLong(objects[0].toString()), Long.parseLong(objects[1].toString()));
         }
         return map;
+    }
+
+    /**
+     * 删除评论
+     *
+     * @param commentId
+     * @throws BusinessException
+     */
+    @Override
+    public void deleteComment(Long commentId) throws BusinessException {
+        Optional<Comment> comment = commentDao.findById(commentId);
+        if (!comment.isPresent()) {
+            throw new BusinessException("找不到id：" + commentId + "的评论");
+        }
+        commentDao.deleteById(commentId);
+        activityStatisticsService.updateStatistics(comment.get().getActivityId(), "comment", "sub");
     }
 }

@@ -7,6 +7,7 @@ import com.treasure.hunt.entity.WxCustomer;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.framework.utils.AES128Util;
 import com.treasure.hunt.framework.utils.HttpUtil;
+import com.treasure.hunt.framework.utils.QiNiuUtil;
 import com.treasure.hunt.service.WxAuthService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class WxAuthServiceImpl implements WxAuthService {
     @Override
     public WxCustomer auth(String code, String encryptedData, String iv) throws BusinessException {
         // 获取微信session_key Url
-        String sessionUrl = getWXSessionUrl(code, Constant.APP_ID, Constant.APP_SECRET);
+//        String sessionUrl = getWXSessionUrl(code, Constant.APP_ID, Constant.APP_SECRET);
         // 获取session_key
         String result = null;
         try {
@@ -83,7 +84,7 @@ public class WxAuthServiceImpl implements WxAuthService {
         return customer;
     }
 
-    public WxCustomer addOrUpdateCustomer(WxCustomer wxCustomer) {
+    private WxCustomer addOrUpdateCustomer(WxCustomer wxCustomer) {
         // 先用Open去获取用户
         if (StringUtils.isNotBlank(wxCustomer.getOpenId())) {
             WxCustomer customer = wxCustomerDao.findByOpenId(wxCustomer.getOpenId());
@@ -108,7 +109,45 @@ public class WxAuthServiceImpl implements WxAuthService {
         return null;
     }
 
-    private static String getWXSessionUrl(String code, String appId, String secret) {
-        return String.format(Constant.WX_SESSION_URL, appId, secret, code);
+//    private static String getWXSessionUrl(String code, String appId, String secret) {
+//        return String.format(Constant.WX_SESSION_URL, appId, secret, code);
+//    }
+
+    /**
+     * 获取小程序二维码
+     * @param path
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String getQrCode(String path) throws Exception {
+        // 获取微信access_token
+        String accessToken = getWxAccessToken();
+
+        String postJson = "{\"path\": \"" + path + "\", \"width\": 430}";
+        byte[] bytes = HttpUtil.postJson2("https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=" + accessToken, postJson);
+        // 上传七牛云
+        return QiNiuUtil.uploadByByte(bytes);
+    }
+
+    /**
+     * 获取微信accesstoken
+     *
+     * @return
+     * @throws BusinessException
+     */
+    private static String getWxAccessToken() throws BusinessException {
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("grant_type", "client_credential");
+        map.put("appid", Constant.APP_ID);
+        map.put("secret", Constant.APP_SECRET);
+        String result = HttpUtil.get("https://api.weixin.qq.com/cgi-bin/token", map);
+        LOG.info("获取微信access_token结果");
+        Map<String, String> resultMap = JSON.parseObject(result, Map.class);
+        if (StringUtils.isBlank(resultMap.get("access_token"))) {
+            throw new BusinessException("获取accessToken失败");
+        } else {
+            return resultMap.get("access_token");
+        }
     }
 }

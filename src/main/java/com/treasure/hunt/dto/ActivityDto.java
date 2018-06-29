@@ -20,6 +20,16 @@ public class ActivityDto implements Serializable {
     public static final Byte STATUS_AUDIT = 0;
 
     /**
+     * 进行中
+     */
+    public static final Byte STATUS_START = 1;
+
+    /**
+     * 结束
+     */
+    public static final Byte STATUS_END = 2;
+
+    /**
      * id
      */
     private Long id;
@@ -28,6 +38,16 @@ public class ActivityDto implements Serializable {
      * 发起人Id
      */
     private Long customerId;
+
+    /**
+     * name
+     */
+    private String customerName;
+
+    /**
+     * image
+     */
+    private String customerImg;
 
     /**
      * 活动标题
@@ -90,30 +110,24 @@ public class ActivityDto implements Serializable {
     private String[] images;
 
     /**
-     * 是否点赞
-     */
-    private Boolean isLike = false;
-
-    /**
-     * 是否加入
-     */
-    private Boolean isJoin = false;
-
-    /**
      * 点赞人数
      */
-    private Long likeNum = 0L;
+    private Integer likeNum = 0;
 
     /**
      * 评论人数
      */
-    private Long commentNum = 0L;
+    private Integer commentNum = 0;
 
     /**
      * 加入人数
      */
-    private Long joinNum = 0L;
+    private Integer joinNum = 0;
 
+    /**
+     * 浏览人数
+     */
+    private Integer viewNum = 0;
 
     public Long getId() {
         return id;
@@ -211,14 +225,6 @@ public class ActivityDto implements Serializable {
         this.imageList = imageList;
     }
 
-    public Boolean getLike() {
-        return isLike;
-    }
-
-    public void setLike(Boolean like) {
-        isLike = like;
-    }
-
     public String[] getImages() {
         return images;
     }
@@ -227,28 +233,20 @@ public class ActivityDto implements Serializable {
         this.images = images;
     }
 
-    public Long getLikeNum() {
+    public Integer getLikeNum() {
         return likeNum;
     }
 
-    public void setLikeNum(Long likeNum) {
+    public void setLikeNum(Integer likeNum) {
         this.likeNum = likeNum;
     }
 
-    public Long getJoinNum() {
+    public Integer getJoinNum() {
         return joinNum;
     }
 
-    public void setJoinNum(Long joinNum) {
+    public void setJoinNum(Integer joinNum) {
         this.joinNum = joinNum;
-    }
-
-    public Boolean getJoin() {
-        return isJoin;
-    }
-
-    public void setJoin(Boolean join) {
-        isJoin = join;
     }
 
     public String getTypeName() {
@@ -259,11 +257,35 @@ public class ActivityDto implements Serializable {
         this.typeName = typeName;
     }
 
-    public Long getCommentNum() {
+    public Integer getCommentNum() {
         return commentNum;
     }
 
-    public void setCommentNum(Long commentNum) {
+    public void setCommentNum(Integer commentNum) {
         this.commentNum = commentNum;
+    }
+
+    public Integer getViewNum() {
+        return viewNum;
+    }
+
+    public void setViewNum(Integer viewNum) {
+        this.viewNum = viewNum;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerImg() {
+        return customerImg;
+    }
+
+    public void setCustomerImg(String customerImg) {
+        this.customerImg = customerImg;
     }
 }

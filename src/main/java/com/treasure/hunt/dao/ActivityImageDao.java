@@ -21,4 +21,10 @@ public interface ActivityImageDao extends JpaRepository<ActivityImage, Long>,Jpa
      * @return
      */
     List<ActivityImage> findByActivityIdIn(List<Long> activityIds);
+
+    /**
+     * 根据活动删除活动图片
+     * @param activityId
+     */
+    void deleteByActivityId(Long activityId);
 }
