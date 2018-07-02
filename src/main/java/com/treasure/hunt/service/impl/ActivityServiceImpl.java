@@ -116,7 +116,7 @@ public class ActivityServiceImpl implements ActivityService {
             throw new BusinessException("找不到id：" + activityDto.getId() + "的活动");
         }
         Activity activity = activityOptional.get();
-        ListBeanUtil.copyProperties(activityDto, activity);
+        ListBeanUtil.copyProperties(activityDto, activity, "status", "qrCode", "createTime");
         activity.setUpdateTime(new Date());
         activityDao.save(activity);
         // 重新添加图片

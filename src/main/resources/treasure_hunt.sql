@@ -1,3 +1,19 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 127.0.0.1
+ Source Server Type    : MySQL
+ Source Server Version : 50720
+ Source Host           : localhost:3306
+ Source Schema         : treasure_hunt
+
+ Target Server Type    : MySQL
+ Target Server Version : 50720
+ File Encoding         : 65001
+
+ Date: 02/07/2018 17:28:15
+*/
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -54,6 +70,22 @@ CREATE TABLE `activity_like`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `customer_id` bigint(20) NULL DEFAULT 0 COMMENT '点赞用户id',
   `activity_id` bigint(20) NULL DEFAULT 0 COMMENT '活动id',
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for activity_statistics
+-- ----------------------------
+DROP TABLE IF EXISTS `activity_statistics`;
+CREATE TABLE `activity_statistics`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '规则id,自增主键',
+  `activity_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '活动id',
+  `like_num` int(10) NOT NULL DEFAULT 0 COMMENT '点赞数',
+  `view_num` int(10) NOT NULL DEFAULT 0 COMMENT '浏览数',
+  `comment_num` int(10) NOT NULL DEFAULT 0 COMMENT '评论数',
+  `join_num` int(10) NOT NULL DEFAULT 0 COMMENT '加入数',
   `create_time` datetime(0) NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -127,18 +159,18 @@ INSERT INTO `user` VALUES (1, '2018-06-17 12:55:45', 'admin', '2018-06-17 12:55:
 DROP TABLE IF EXISTS `wx_customer`;
 CREATE TABLE `wx_customer`  (
   `customer_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '头像',
+  `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '城市',
+  `country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '国家',
   `create_time` datetime(0) NULL DEFAULT NULL,
-  `gender` int(11) NULL DEFAULT NULL,
-  `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `nick_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `province` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `union_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `gender` int(11) NOT NULL DEFAULT 1 COMMENT '性别',
+  `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '电话',
+  `nick_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '昵称',
+  `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'openId',
+  `province` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '省份',
+  `union_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'unionId',
   `update_time` datetime(0) NULL DEFAULT NULL,
-  `integral` int(11) NULL DEFAULT NULL,
+  `integral` int(11) NOT NULL DEFAULT 0 COMMENT '积分',
   PRIMARY KEY (`customer_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 

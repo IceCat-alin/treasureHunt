@@ -1,5 +1,8 @@
 package com.treasure.hunt.entity;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -12,6 +15,8 @@ import java.util.List;
  * @Version 版本号：v1.0.0
  */
 @Entity
+@DynamicUpdate
+@DynamicInsert
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

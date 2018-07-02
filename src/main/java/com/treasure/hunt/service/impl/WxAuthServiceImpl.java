@@ -93,6 +93,7 @@ public class WxAuthServiceImpl implements WxAuthService {
             if (customer == null) {
                 wxCustomer.setCreateTime(new Date());
                 wxCustomer.setUpdateTime(new Date());
+                wxCustomer.setIntegral(0);
                 wxCustomer = wxCustomerDao.save(wxCustomer);
                 return wxCustomer;
             }
