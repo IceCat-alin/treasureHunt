@@ -30,6 +30,11 @@ public class ActivityDto implements Serializable {
     public static final Byte STATUS_END = 2;
 
     /**
+     * 置顶
+     */
+    public static final Byte TOP_TRUE = 1;
+
+    /**
      * id
      */
     private Long id;
@@ -88,6 +93,11 @@ public class ActivityDto implements Serializable {
      * 活动状态：0审核中，1进行中，2活动结束
      */
     private Byte status;
+
+    /**
+     * 是否置顶
+     */
+    private Byte isTop;
 
     /**
      * 创建时间
@@ -287,5 +297,13 @@ public class ActivityDto implements Serializable {
 
     public void setCustomerImg(String customerImg) {
         this.customerImg = customerImg;
+    }
+
+    public Byte getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(Byte isTop) {
+        this.isTop = isTop;
     }
 }

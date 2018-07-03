@@ -87,6 +87,12 @@ public class ActivityServiceImpl implements ActivityService {
         addImage(activityDto.getImages(), activity.getId());
     }
 
+    /**
+     * 添加图片
+     *
+     * @param images
+     * @param activityId
+     */
     private void addImage(String[] images, Long activityId) {
         if (images != null && images.length > 0) {
             List<ActivityImage> imageList = new ArrayList<>();
@@ -144,6 +150,26 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     * 获取置顶的活动
+     *
+     * @return
+     * @throws BusinessException
+     */
+    @Override
+    public List<ActivityDto> getTopActivity() throws BusinessException {
+        List<Activity> activityList = activityDao.findByIsTop(ActivityDto.TOP_TRUE);
+        if (activityList != null && activityList.size() < 3) {
+            List<Long> activityIds = activityStatisticsDao.getActivityIdOrderByViewAndJoin();
+            if (activityIds != null && !activityIds.isEmpty()) {
+                activityIds = activityIds.subList(0, 3);
+                List<Activity> hotActivityList = activityDao.findByIdIn(activityIds);
+                activityList.addAll(hotActivityList);
+            }
+        }
+        return packData(activityList);
+    }
+
+    /**
      * 分页获取活动
      *
      * @param pageNo      页码
@@ -192,12 +218,15 @@ public class ActivityServiceImpl implements ActivityService {
             List<ActivityImage> activityImages = activityImageDao.findByActivityIdIn(activityIds);
             Map<Long, List<ActivityImage>> imageMap = ListBeanUtil.toMapList(activityImages, activityIds, "activityId");
 
+            List<Long> customerIds = ListBeanUtil.toList(activityDtos, "customerId");
+            List<WxCustomer> customerList = wxCustomerDao.findByCustomerIdIn(customerIds);
+            Map<Long, WxCustomer> customerMap = ListBeanUtil.toMap(customerList, "customerId");
+
             for (ActivityDto activityDto1 : activityDtos) {
                 ActivityStatistics statistics = statisticsMap.get(activityDto1.getId());
                 if (statistics != null) {
                     ListBeanUtil.copyProperties(statistics, activityDto1, "id", "createTime", "updateTime");
                 }
-
                 ActivityType activityType = activityTypeMap.get(activityDto1.getTypeId());
                 if (activityType != null) {
                     activityDto1.setTypeName(activityType.getName());
@@ -205,6 +234,11 @@ public class ActivityServiceImpl implements ActivityService {
                 List<ActivityImage> activityImageList = imageMap.get(activityDto1.getId());
                 if (activityImageList != null && !activityImageList.isEmpty()) {
                     activityDto1.setImageList(activityImageList);
+                }
+                WxCustomer customer = customerMap.get(activityDto1.getCustomerId());
+                if (customer != null) {
+                    activityDto1.setCustomerImg(customer.getAvatarUrl());
+                    activityDto1.setCustomerName(customer.getNickName());
                 }
             }
         }

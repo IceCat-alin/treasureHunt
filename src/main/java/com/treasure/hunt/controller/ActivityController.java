@@ -43,6 +43,13 @@ public class ActivityController {
         return ResultInfo.success("发起活动成功，请等待审核", null);
     }
 
+    /**
+     * 修改活动
+     *
+     * @param activityDto
+     * @return
+     * @throws BusinessException
+     */
     @RequestMapping("/updateActivity")
     @ResponseBody
     public ResultInfo updateActivity(ActivityDto activityDto) throws BusinessException {
@@ -134,6 +141,7 @@ public class ActivityController {
 
     /**
      * 获取用户在该活动的点赞和加入状态
+     *
      * @param activityId
      * @param customerId
      * @return
@@ -143,6 +151,18 @@ public class ActivityController {
     public ResultInfo getLikeAndJoinStatus(Long activityId, Long customerId) {
         Map<String, Boolean> map = activityService.getLikeAndJoinStatus(activityId, customerId);
         return ResultInfo.success("获取状态成功", map);
+    }
+
+    /**
+     * 获取置顶活动
+     *
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/getTopActivity")
+    @ResponseBody
+    public ResultInfo getTopActivity() throws BusinessException {
+        return ResultInfo.success("获取置顶活动成功", activityService.getTopActivity());
     }
 
 }

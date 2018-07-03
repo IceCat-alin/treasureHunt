@@ -36,8 +36,7 @@ public class ActivityJoinController {
     @RequestMapping("/joinActivity")
     @ResponseBody
     public ResultInfo joinActivity(Long activityId, Long customerId) throws BusinessException {
-        activityJoinService.joinActivity(activityId, customerId);
-        return ResultInfo.success("加入成功", null);
+        return ResultInfo.success("加入成功", activityJoinService.joinActivity(activityId, customerId));
     }
 
     /**

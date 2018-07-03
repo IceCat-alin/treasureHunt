@@ -2,6 +2,7 @@ package com.treasure.hunt.service;
 
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.dto.CommentDto;
+import com.treasure.hunt.entity.Comment;
 import com.treasure.hunt.framework.exception.BusinessException;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 public interface CommentService {
 
-    void addComment(CommentDto commentDto) throws BusinessException;
+    Comment addComment(CommentDto commentDto) throws BusinessException;
 
     PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException;
 

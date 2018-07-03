@@ -64,8 +64,7 @@ public class CommentController {
     @RequestMapping("/addComment")
     @ResponseBody
     public ResultInfo addComment(CommentDto commentDto) throws BusinessException {
-        commentService.addComment(commentDto);
-        return ResultInfo.success("新增评论成功", null);
+        return ResultInfo.success("新增评论成功", commentService.addComment(commentDto));
     }
 
     /**

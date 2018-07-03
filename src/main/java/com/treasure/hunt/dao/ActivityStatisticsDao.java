@@ -3,6 +3,7 @@ package com.treasure.hunt.dao;
 import com.treasure.hunt.entity.ActivityStatistics;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -29,4 +30,7 @@ public interface ActivityStatisticsDao extends JpaRepository<ActivityStatistics,
      * @return
      */
     List<ActivityStatistics> findByActivityIdIn(List<Long> activityIds);
+
+    @Query("select activityId from ActivityStatistics order by (viewNum + joinNum), createTime desc")
+    List<Long> getActivityIdOrderByViewAndJoin();
 }

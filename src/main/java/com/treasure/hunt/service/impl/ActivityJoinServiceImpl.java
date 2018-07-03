@@ -54,7 +54,7 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
     private ActivityService activityService;
 
     @Override
-    public void joinActivity(Long activityId, Long customerId) {
+    public ActivityJoin joinActivity(Long activityId, Long customerId) {
         ActivityJoin activityJoin = activityJoinDao.findByCustomerIdAndActivityId(customerId, activityId);
         if (activityJoin != null) {
             activityJoinDao.delete(activityJoin);
@@ -68,6 +68,7 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
             activityJoinDao.save(activityJoin);
             activityStatisticsService.updateStatistics(activityId, "join", "add");
         }
+        return activityJoin;
     }
 
     @Override

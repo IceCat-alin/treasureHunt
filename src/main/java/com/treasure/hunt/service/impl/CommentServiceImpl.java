@@ -48,14 +48,15 @@ public class CommentServiceImpl implements CommentService {
      * @throws BusinessException
      */
     @Override
-    public void addComment(CommentDto commentDto) throws BusinessException {
+    public Comment addComment(CommentDto commentDto) throws BusinessException {
         Comment comment = new Comment();
         ListBeanUtil.copyProperties(commentDto, comment);
         comment.setUpdateTime(new Date());
         comment.setCreateTime(new Date());
         comment.setIsBest(CommentDto.BEST_FALSE);
-        commentDao.save(comment);
+        comment = commentDao.save(comment);
         activityStatisticsService.updateStatistics(commentDto.getActivityId(), "comment", "add");
+        return comment;
     }
 
     /**
@@ -71,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     public PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
         int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
         int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
-        PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("DESC", "createTime,isBest"));
+        PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("DESC", "isBest,createTime"));
 
         Criteria<Comment> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("activityId", activityId, true));
@@ -93,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
                 commentDto.setCustomerImg(wxCustomer.getAvatarUrl());
                 commentDto.setCustomerName(wxCustomer.getNickName());
             }
-            WxCustomer toCustomer = wxCustomerMap.get(commentDto.getToCommentId());
+            WxCustomer toCustomer = wxCustomerMap.get(commentDto.getToCustomerId());
             if (toCustomer != null) {
                 commentDto.setToCustomerName(toCustomer.getNickName());
             }
@@ -114,13 +115,20 @@ public class CommentServiceImpl implements CommentService {
         if (!comment.isPresent()) {
             throw new BusinessException("找不到id：" + commentId + "的评论");
         }
-        comment.get().setIsBest(CommentDto.BEST_TRUE);
         // 用户积分+1
         Optional<WxCustomer> wxCustomer = wxCustomerDao.findById(comment.get().getCustomerId());
         if (!wxCustomer.isPresent()) {
             throw new BusinessException("找不到id：" + comment.get().getCustomerId() + "的用户");
         }
-        wxCustomer.get().setIntegral(wxCustomer.get().getIntegral() + 1);
+        if (CommentDto.BEST_TRUE.equals(comment.get().getIsBest())) {
+            comment.get().setIsBest(CommentDto.BEST_FALSE);
+            wxCustomer.get().setIntegral(wxCustomer.get().getIntegral() - 1);
+        } else {
+            comment.get().setIsBest(CommentDto.BEST_TRUE);
+            wxCustomer.get().setIntegral(wxCustomer.get().getIntegral() + 1);
+        }
+        commentDao.save(comment.get());
+        wxCustomerDao.save(wxCustomer.get());
     }
 
     /**

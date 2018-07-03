@@ -3,7 +3,10 @@ package com.treasure.hunt.entity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -60,6 +63,11 @@ public class Activity implements Serializable {
      * 活动状态：0审核中，1进行中，2活动结束
      */
     private Byte status;
+
+    /**
+     * 是否置顶
+     */
+    private Byte isTop;
 
     /**
      * 创建时间
@@ -157,5 +165,13 @@ public class Activity implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Byte getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(Byte isTop) {
+        this.isTop = isTop;
     }
 }
