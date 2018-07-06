@@ -120,10 +120,18 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
 
         Page<ActivityJoin> page = activityJoinDao.findAll(criteria, pageable);
         List<ActivityJoin> domainList = page.getContent();
+        Map<Long, ActivityJoin> joinMap = ListBeanUtil.toMap(domainList, "activityId");
 
         List<Long> activityIds = ListBeanUtil.toList(domainList, "activityId");
         List<Activity> wxCustomerList = activityDao.findByIdIn(activityIds);
         List<ActivityDto> activityDtos = activityService.packData(wxCustomerList);
+        // 加入时间
+        for (ActivityDto activityDto : activityDtos) {
+            ActivityJoin activityJoin = joinMap.get(activityDto.getId());
+            if (activityJoin != null) {
+                activityDto.setJoinTime(activityJoin.getCreateTime());
+            }
+        }
 
         return new PageList(activityDtos, page.getTotalElements(), page.getTotalPages());
     }

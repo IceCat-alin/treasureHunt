@@ -132,6 +132,27 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     * 设置置顶
+     *
+     * @param activityId
+     * @throws BusinessException
+     */
+    @Override
+    public void setTopActivity(Long activityId) throws BusinessException {
+        Optional<Activity> activity = activityDao.findById(activityId);
+        if (!activity.isPresent()) {
+            throw new BusinessException("找不到id：" + activityId + "的活动");
+        }
+        if (ActivityDto.TOP_TRUE.equals(activity.get().getIsTop())) {
+            activity.get().setIsTop(ActivityDto.TOP_FALSE);
+        } else {
+            activity.get().setIsTop(ActivityDto.TOP_TRUE);
+        }
+        activity.get().setUpdateTime(new Date());
+        activityDao.save(activity.get());
+    }
+
+    /**
      * 审核活动
      *
      * @param activityId 活动Id
@@ -161,7 +182,9 @@ public class ActivityServiceImpl implements ActivityService {
         if (activityList != null && activityList.size() < 3) {
             List<Long> activityIds = activityStatisticsDao.getActivityIdOrderByViewAndJoin();
             if (activityIds != null && !activityIds.isEmpty()) {
-                activityIds = activityIds.subList(0, 3);
+                if (activityIds.size() > 3) {
+                    activityIds = activityIds.subList(0, 3);
+                }
                 List<Activity> hotActivityList = activityDao.findByIdIn(activityIds);
                 activityList.addAll(hotActivityList);
             }
@@ -370,6 +393,9 @@ public class ActivityServiceImpl implements ActivityService {
         }
         if (activityDto.getStatus() != null) {
             criteria.add(Restrictions.eq("status", activityDto.getStatus(), true));
+        }
+        if (StringUtils.isNotBlank(activityDto.getAddress())) {
+            criteria.add(Restrictions.like("address", "%" + activityDto.getAddress() + "%", true));
         }
         return criteria;
     }

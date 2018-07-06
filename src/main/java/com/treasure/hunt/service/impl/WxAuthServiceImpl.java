@@ -2,8 +2,12 @@ package com.treasure.hunt.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.treasure.hunt.common.Constant;
+import com.treasure.hunt.common.PageList;
+import com.treasure.hunt.common.PageSort;
 import com.treasure.hunt.dao.WxCustomerDao;
 import com.treasure.hunt.entity.WxCustomer;
+import com.treasure.hunt.framework.database.Criteria;
+import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.framework.utils.AES128Util;
 import com.treasure.hunt.framework.utils.HttpUtil;
@@ -13,12 +17,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Description 类描述：
@@ -116,6 +123,7 @@ public class WxAuthServiceImpl implements WxAuthService {
 
     /**
      * 获取小程序二维码
+     *
      * @param path
      * @return
      * @throws Exception
@@ -129,6 +137,45 @@ public class WxAuthServiceImpl implements WxAuthService {
         byte[] bytes = HttpUtil.postJson2("https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=" + accessToken, postJson);
         // 上传七牛云
         return QiNiuUtil.uploadByByte(bytes);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @param customerId
+     * @return
+     * @throws BusinessException
+     */
+    @Override
+    public WxCustomer getCustomerInfo(Long customerId) throws BusinessException {
+        Optional<WxCustomer> wxCustomer = wxCustomerDao.findById(customerId);
+        if (!wxCustomer.isPresent()) {
+            throw new BusinessException("找不到Id" + customerId + "的用户");
+        }
+        return wxCustomer.get();
+    }
+
+    /**
+     * 获取用户列表
+     * @param pageNo
+     * @param pageSize
+     * @param wxCustomer
+     * @return
+     */
+    @Override
+    public PageList<WxCustomer> getCustomerPage(Integer pageNo, Integer pageSize, WxCustomer wxCustomer) {
+        int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
+        int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
+        PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("DESC", "createTime"));
+
+        Criteria<WxCustomer> criteria = new Criteria<>();
+        if (StringUtils.isNotBlank(wxCustomer.getNickName())) {
+            criteria.add(Restrictions.like("nickName", "%" + wxCustomer.getNickName() + "%", true));
+        }
+
+        Page<WxCustomer> page = wxCustomerDao.findAll(criteria, pageable);
+
+        return new PageList(page.getContent(), page.getTotalElements(), page.getTotalPages());
     }
 
     /**

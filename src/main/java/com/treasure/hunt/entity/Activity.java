@@ -50,6 +50,16 @@ public class Activity implements Serializable {
     private String address;
 
     /**
+     * 纬度
+     */
+    private Double lat;
+
+    /**
+     * 经度
+     */
+    private Double lng;
+
+    /**
      * 结束时间
      */
     private Date endTime;
@@ -173,5 +183,21 @@ public class Activity implements Serializable {
 
     public void setIsTop(Byte isTop) {
         this.isTop = isTop;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 }

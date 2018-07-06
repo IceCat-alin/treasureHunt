@@ -35,6 +35,11 @@ public class ActivityDto implements Serializable {
     public static final Byte TOP_TRUE = 1;
 
     /**
+     * 置顶
+     */
+    public static final Byte TOP_FALSE = 0;
+
+    /**
      * id
      */
     private Long id;
@@ -78,6 +83,16 @@ public class ActivityDto implements Serializable {
      * 活动地址
      */
     private String address;
+
+    /**
+     * 纬度
+     */
+    private Double lat;
+
+    /**
+     * 经度
+     */
+    private Double lng;
 
     /**
      * 结束时间
@@ -138,6 +153,11 @@ public class ActivityDto implements Serializable {
      * 浏览人数
      */
     private Integer viewNum = 0;
+
+    /**
+     * 加入时间
+     */
+    private Date joinTime;
 
     public Long getId() {
         return id;
@@ -305,5 +325,29 @@ public class ActivityDto implements Serializable {
 
     public void setIsTop(Byte isTop) {
         this.isTop = isTop;
+    }
+
+    public Date getJoinTime() {
+        return joinTime;
+    }
+
+    public void setJoinTime(Date joinTime) {
+        this.joinTime = joinTime;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 }

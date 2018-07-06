@@ -1,10 +1,8 @@
 package com.treasure.hunt;
 
 import com.alibaba.fastjson.JSON;
-import com.treasure.hunt.common.PageList;
-import com.treasure.hunt.entity.User;
-import com.treasure.hunt.service.ActivityLikeService;
-import com.treasure.hunt.service.UserInfoService;
+import com.treasure.hunt.entity.WxCustomer;
+import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.WxAuthService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,8 +21,8 @@ public class WxTests {
     WxAuthService wxAuthService;
 
     @Test
-    public void getUserPageTest() {
-//        wxAuthService.getQrCode("pages/detail/detail?activityId=12&customerId=2");
+    public void getCustomerPage() throws BusinessException {
+        System.out.println(JSON.toJSON(wxAuthService.getCustomerPage(1, 10, new WxCustomer())));
     }
 
 }

@@ -27,4 +27,6 @@ public interface ActivityService {
     Map<String, Boolean> getLikeAndJoinStatus(Long activityId, Long customerId);
 
     void updateActivity(ActivityDto activityDto) throws BusinessException;
+
+    void setTopActivity(Long activityId) throws BusinessException;
 }

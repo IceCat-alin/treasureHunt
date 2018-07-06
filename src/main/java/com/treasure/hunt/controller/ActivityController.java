@@ -81,6 +81,19 @@ public class ActivityController {
     }
 
     /**
+     * 设置置顶
+     * @param activityId
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/setTopActivity")
+    @ResponseBody
+    public ResultInfo setTopActivity(Long activityId) throws BusinessException {
+        activityService.setTopActivity(activityId);
+        return ResultInfo.success("设置成功", null);
+    }
+
+    /**
      * 分页查询活动
      *
      * @param pageNo
