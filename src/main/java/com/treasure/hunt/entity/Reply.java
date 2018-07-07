@@ -1,44 +1,34 @@
-package com.treasure.hunt.dto;
+package com.treasure.hunt.entity;
 
-import com.treasure.hunt.entity.Reply;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Description 类描述：评论
+ * @Description 类描述：
  * @Author 创建人：linying
- * @Date 创建时间：2018/6/19 10:55
+ * @Date 创建时间：2018/7/7 15:29
  * @Version 版本号：v1.0.0
  */
-public class CommentDto implements Serializable {
+@Entity
+@DynamicUpdate
+@DynamicInsert
+public class Reply implements Serializable{
 
-    /**
-     * 最佳
-     */
-    public static final Byte BEST_TRUE = 1;
-
-    /**
-     * 非最佳
-     */
-    public static final Byte BEST_FALSE = 0;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * 活动id
-     */
-    private Long activityId;
-
-    /**
-     * 评论用户id
+     * 用户Id
      */
     private Long customerId;
-
-    /**
-     * 用户头像
-     */
-    private String customerImg;
 
     /**
      * 用户昵称
@@ -46,14 +36,14 @@ public class CommentDto implements Serializable {
     private String customerName;
 
     /**
-     * 评论内容
+     * 评论Id
      */
-    private String content;
+    private Long commentId;
 
     /**
-     * 是否最佳
+     * 回复内容
      */
-    private Byte isBest;
+    private String content;
 
     /**
      * 创建时间
@@ -65,11 +55,6 @@ public class CommentDto implements Serializable {
      */
     private Date updateTime;
 
-    /**
-     * 回复
-     */
-    private Reply reply;
-
     public Long getId() {
         return id;
     }
@@ -78,20 +63,20 @@ public class CommentDto implements Serializable {
         this.id = id;
     }
 
-    public Long getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(Long activityId) {
-        this.activityId = activityId;
-    }
-
     public Long getCustomerId() {
         return customerId;
     }
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public Long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
     public String getContent() {
@@ -118,35 +103,11 @@ public class CommentDto implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getCustomerImg() {
-        return customerImg;
-    }
-
-    public void setCustomerImg(String customerImg) {
-        this.customerImg = customerImg;
-    }
-
     public String getCustomerName() {
         return customerName;
     }
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public Byte getIsBest() {
-        return isBest;
-    }
-
-    public void setIsBest(Byte isBest) {
-        this.isBest = isBest;
-    }
-
-    public Reply getReply() {
-        return reply;
-    }
-
-    public void setReply(Reply reply) {
-        this.reply = reply;
     }
 }

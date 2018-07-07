@@ -11,15 +11,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Description 类描述：评论
+ * @Description 类描述：
  * @Author 创建人：linying
- * @Date 创建时间：2018/6/19 10:55
+ * @Date 创建时间：2018/7/7 10:31
  * @Version 版本号：v1.0.0
  */
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class Comment implements Serializable {
+public class Message implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,19 +31,29 @@ public class Comment implements Serializable {
     private Long activityId;
 
     /**
-     * 评论用户id
+     * 发送人Id
      */
     private Long customerId;
 
     /**
-     * 评论内容
+     * 接收人
+     */
+    private Long toCustomerId;
+
+    /**
+     * 接收内容
      */
     private String content;
 
     /**
-     * 是否最佳
+     * 类型
      */
-    private Byte isBest;
+    private Byte type;
+
+    /**
+     * 状态
+     */
+    private Byte status;
 
     /**
      * 创建时间
@@ -63,14 +73,6 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Long getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(Long activityId) {
-        this.activityId = activityId;
-    }
-
     public Long getCustomerId() {
         return customerId;
     }
@@ -85,6 +87,14 @@ public class Comment implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 
     public Date getCreateTime() {
@@ -103,11 +113,27 @@ public class Comment implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Byte getIsBest() {
-        return isBest;
+    public Long getActivityId() {
+        return activityId;
     }
 
-    public void setIsBest(Byte isBest) {
-        this.isBest = isBest;
+    public void setActivityId(Long activityId) {
+        this.activityId = activityId;
+    }
+
+    public Long getToCustomerId() {
+        return toCustomerId;
+    }
+
+    public void setToCustomerId(Long toCustomerId) {
+        this.toCustomerId = toCustomerId;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 }

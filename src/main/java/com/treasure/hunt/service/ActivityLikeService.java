@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface ActivityLikeService {
 
-    void likeActivity(Long activityId, Long customerId);
+    void likeActivity(Long activityId, Long customerId) throws BusinessException;
 
     Map<Long, Long> groupByActivityId(List<Long> activityIds);
 

@@ -7,6 +7,7 @@ import com.treasure.hunt.common.PageSort;
 import com.treasure.hunt.dao.ActivityLikeDao;
 import com.treasure.hunt.dao.WxCustomerDao;
 import com.treasure.hunt.dto.ActivityLikeDto;
+import com.treasure.hunt.dto.MessageDto;
 import com.treasure.hunt.entity.ActivityLike;
 import com.treasure.hunt.entity.WxCustomer;
 import com.treasure.hunt.framework.database.Criteria;
@@ -14,6 +15,7 @@ import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityLikeService;
 import com.treasure.hunt.service.ActivityStatisticsService;
+import com.treasure.hunt.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,8 +46,11 @@ public class ActivityLikeServiceImpl implements ActivityLikeService {
     @Autowired
     private ActivityStatisticsService activityStatisticsService;
 
+    @Autowired
+    private MessageService messageService;
+
     @Override
-    public void likeActivity(Long activityId, Long customerId) {
+    public void likeActivity(Long activityId, Long customerId) throws BusinessException {
         ActivityLike activityLike = activityLikeDao.findByCustomerIdAndActivityId(customerId, activityId);
         if (activityLike != null) {
             activityLikeDao.delete(activityLike);
@@ -58,6 +63,7 @@ public class ActivityLikeServiceImpl implements ActivityLikeService {
             activityLike.setUpdateTime(new Date());
             activityLikeDao.save(activityLike);
             activityStatisticsService.updateStatistics(activityId, "like", "add");
+            messageService.addMessage(activityId, "您的藏宝有新点赞了", MessageDto.TYPE_LIKE);
         }
     }
 

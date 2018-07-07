@@ -9,6 +9,7 @@ import com.treasure.hunt.dao.ActivityJoinDao;
 import com.treasure.hunt.dao.WxCustomerDao;
 import com.treasure.hunt.dto.ActivityDto;
 import com.treasure.hunt.dto.ActivityJoinDto;
+import com.treasure.hunt.dto.MessageDto;
 import com.treasure.hunt.entity.Activity;
 import com.treasure.hunt.entity.ActivityJoin;
 import com.treasure.hunt.entity.WxCustomer;
@@ -18,6 +19,7 @@ import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityJoinService;
 import com.treasure.hunt.service.ActivityService;
 import com.treasure.hunt.service.ActivityStatisticsService;
+import com.treasure.hunt.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,8 +55,11 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
     @Autowired
     private ActivityService activityService;
 
+    @Autowired
+    private MessageService messageService;
+
     @Override
-    public ActivityJoin joinActivity(Long activityId, Long customerId) {
+    public ActivityJoin joinActivity(Long activityId, Long customerId) throws BusinessException {
         ActivityJoin activityJoin = activityJoinDao.findByCustomerIdAndActivityId(customerId, activityId);
         if (activityJoin != null) {
             activityJoinDao.delete(activityJoin);
@@ -67,6 +72,7 @@ public class ActivityJoinServiceImpl implements ActivityJoinService {
             activityJoin.setUpdateTime(new Date());
             activityJoinDao.save(activityJoin);
             activityStatisticsService.updateStatistics(activityId, "join", "add");
+            messageService.addMessage(activityId, "您的藏宝有新人加入了", MessageDto.TYPE_JOIN);
         }
         return activityJoin;
     }

@@ -5,15 +5,19 @@ import com.treasure.hunt.common.ListBeanUtil;
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.PageSort;
 import com.treasure.hunt.dao.CommentDao;
+import com.treasure.hunt.dao.ReplyDao;
 import com.treasure.hunt.dao.WxCustomerDao;
 import com.treasure.hunt.dto.CommentDto;
+import com.treasure.hunt.dto.MessageDto;
 import com.treasure.hunt.entity.Comment;
+import com.treasure.hunt.entity.Reply;
 import com.treasure.hunt.entity.WxCustomer;
 import com.treasure.hunt.framework.database.Criteria;
 import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityStatisticsService;
 import com.treasure.hunt.service.CommentService;
+import com.treasure.hunt.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +45,12 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private ActivityStatisticsService activityStatisticsService;
 
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private ReplyDao replyDao;
+
     /**
      * 新增评论
      *
@@ -56,6 +66,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setIsBest(CommentDto.BEST_FALSE);
         comment = commentDao.save(comment);
         activityStatisticsService.updateStatistics(commentDto.getActivityId(), "comment", "add");
+        messageService.addMessage(comment.getActivityId(), "您的藏宝有新评论了", MessageDto.TYPE_COMMENT);
         return comment;
     }
 
@@ -82,21 +93,27 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> domainList = page.getContent();
         List<CommentDto> commentDtos = ListBeanUtil.listCopy(domainList, CommentDto.class);
 
-        List<Long> customerIds = ListBeanUtil.toList(commentDtos, "customerId");
-        List<Long> toCustomerIds = ListBeanUtil.toList(commentDtos, "toCustomerId");
-        customerIds.addAll(toCustomerIds);
-        List<WxCustomer> wxCustomerList = wxCustomerDao.findByCustomerIdIn(customerIds);
-        Map<Long, WxCustomer> wxCustomerMap = ListBeanUtil.toMap(wxCustomerList, "customerId");
+        if (commentDtos != null && !commentDtos.isEmpty()) {
+            List<Long> commentIds = ListBeanUtil.toList(commentDtos, "id");
+            List<Long> customerIds = ListBeanUtil.toList(commentDtos, "customerId");
+            List<Long> toCustomerIds = ListBeanUtil.toList(commentDtos, "toCustomerId");
+            customerIds.addAll(toCustomerIds);
+            List<WxCustomer> wxCustomerList = wxCustomerDao.findByCustomerIdIn(customerIds);
+            Map<Long, WxCustomer> wxCustomerMap = ListBeanUtil.toMap(wxCustomerList, "customerId");
 
-        for (CommentDto commentDto : commentDtos) {
-            WxCustomer wxCustomer = wxCustomerMap.get(commentDto.getCustomerId());
-            if (wxCustomer != null) {
-                commentDto.setCustomerImg(wxCustomer.getAvatarUrl());
-                commentDto.setCustomerName(wxCustomer.getNickName());
-            }
-            WxCustomer toCustomer = wxCustomerMap.get(commentDto.getToCustomerId());
-            if (toCustomer != null) {
-                commentDto.setToCustomerName(toCustomer.getNickName());
+            List<Reply> replyList = replyDao.findByCommentIdsGroupByCommentId(commentIds);
+            Map<Long, Reply> replyMap = ListBeanUtil.toMap(replyList, "commentId");
+
+            for (CommentDto commentDto : commentDtos) {
+                WxCustomer wxCustomer = wxCustomerMap.get(commentDto.getCustomerId());
+                if (wxCustomer != null) {
+                    commentDto.setCustomerImg(wxCustomer.getAvatarUrl());
+                    commentDto.setCustomerName(wxCustomer.getNickName());
+                }
+                Reply reply = replyMap.get(commentDto.getId());
+                if (reply != null) {
+                    commentDto.setReply(reply);
+                }
             }
         }
 

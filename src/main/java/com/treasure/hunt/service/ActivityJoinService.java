@@ -8,7 +8,7 @@ import com.treasure.hunt.framework.exception.BusinessException;
 
 public interface ActivityJoinService {
 
-    ActivityJoin joinActivity(Long activityId, Long customerId);
+    ActivityJoin joinActivity(Long activityId, Long customerId) throws BusinessException;
 
     PageList<ActivityJoinDto> getActivityJoinPage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException;
 

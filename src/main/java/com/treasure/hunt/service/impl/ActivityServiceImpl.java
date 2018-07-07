@@ -6,11 +6,13 @@ import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.PageSort;
 import com.treasure.hunt.dao.*;
 import com.treasure.hunt.dto.ActivityDto;
+import com.treasure.hunt.dto.MessageDto;
 import com.treasure.hunt.entity.*;
 import com.treasure.hunt.framework.database.Criteria;
 import com.treasure.hunt.framework.database.Restrictions;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityService;
+import com.treasure.hunt.service.MessageService;
 import com.treasure.hunt.service.WxAuthService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     private WxAuthService wxAuthService;
+
+    @Autowired
+    private MessageService messageService;
 
     /**
      * 新增寻宝活动
@@ -168,6 +173,7 @@ public class ActivityServiceImpl implements ActivityService {
         activity.get().setStatus(status);
         activity.get().setUpdateTime(new Date());
         activityDao.save(activity.get());
+        messageService.addMessage(activityId, "您的藏宝申请已审核通过", MessageDto.TYPE_AUDIT);
     }
 
     /**
