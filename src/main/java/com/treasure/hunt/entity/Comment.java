@@ -41,6 +41,11 @@ public class Comment implements Serializable {
     private String content;
 
     /**
+     * 类型 1.评论2.回答
+     */
+    private Byte type;
+
+    /**
      * 是否最佳
      */
     private Byte isBest;
@@ -109,5 +114,13 @@ public class Comment implements Serializable {
 
     public void setIsBest(Byte isBest) {
         this.isBest = isBest;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

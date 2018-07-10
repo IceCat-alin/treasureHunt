@@ -40,6 +40,16 @@ public class ActivityDto implements Serializable {
     public static final Byte TOP_FALSE = 0;
 
     /**
+     * 藏宝
+     */
+    public static final Byte TYPE_TREASURE = 1;
+
+    /**
+     * 帖子
+     */
+    public static final Byte TYPE_TOPIC = 2;
+
+    /**
      * id
      */
     private Long id;
@@ -73,6 +83,11 @@ public class ActivityDto implements Serializable {
      * 活动类型
      */
     private Long typeId;
+
+    /**
+     * 1.藏宝，2帖子
+     */
+    private Byte type;
 
     /**
      * 类型名称
@@ -349,5 +364,13 @@ public class ActivityDto implements Serializable {
 
     public void setLng(Double lng) {
         this.lng = lng;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

@@ -155,8 +155,18 @@ public class WxAuthServiceImpl implements WxAuthService {
         return wxCustomer.get();
     }
 
+    @Override
+    public Integer getRank(Long customerId) {
+        Map<String, Object> map = wxCustomerDao.getRowNumByCustomerId(customerId);
+        if (StringUtils.isNotBlank(map.get("rowno").toString())) {
+            return (int) Math.ceil(Double.valueOf(map.get("rowno").toString()));
+        }
+        return 0;
+    }
+
     /**
      * 获取用户列表
+     *
      * @param pageNo
      * @param pageSize
      * @param wxCustomer

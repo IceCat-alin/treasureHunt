@@ -2,7 +2,6 @@ package com.treasure.hunt.controller;
 
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.ResultInfo;
-import com.treasure.hunt.dto.ActivityDto;
 import com.treasure.hunt.entity.WxCustomer;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.WxAuthService;
@@ -10,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description 类描述：
@@ -54,7 +56,11 @@ public class WxAuthController {
     public ResultInfo getCustomerInfo(Long customerId) throws BusinessException {
         WxCustomer wxCustomer = wxAuthService.getCustomerInfo(customerId);
         wxCustomer.setOpenId(null);
-        return ResultInfo.success("获取用户信息成功", wxCustomer);
+        Integer rank = wxAuthService.getRank(customerId);
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("customer", wxCustomer);
+        map.put("rank", rank);
+        return ResultInfo.success("获取用户信息成功", map);
     }
 
     /**

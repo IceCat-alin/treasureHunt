@@ -19,5 +19,7 @@ public interface WxAuthService {
 
     WxCustomer getCustomerInfo(Long customerId) throws BusinessException;
 
+    Integer getRank(Long customerId);
+
     PageList<WxCustomer> getCustomerPage(Integer pageNo, Integer pageSize, WxCustomer wxCustomer);
 }

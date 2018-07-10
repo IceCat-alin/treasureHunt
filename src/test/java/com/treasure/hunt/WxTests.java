@@ -25,4 +25,8 @@ public class WxTests {
         System.out.println(JSON.toJSON(wxAuthService.getCustomerPage(1, 10, new WxCustomer())));
     }
 
+    @Test
+    public void getRank() throws BusinessException {
+        System.out.println(wxAuthService.getRank(4L));
+    }
 }

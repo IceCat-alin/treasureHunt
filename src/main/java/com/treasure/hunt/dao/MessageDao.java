@@ -6,4 +6,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface MessageDao extends JpaRepository<Message, Long>, JpaSpecificationExecutor<Message> {
 
+    /**
+     * 获取消息数
+     * @param status
+     * @return
+     */
+    Integer countByStatus(Byte status);
 }

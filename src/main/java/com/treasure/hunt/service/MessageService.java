@@ -12,4 +12,7 @@ public interface MessageService {
 
     void setMessageRead(Long messageId) throws BusinessException;
 
+    void deleteMessage(Long messageId) throws BusinessException;
+
+    Integer getUnReadNum();
 }

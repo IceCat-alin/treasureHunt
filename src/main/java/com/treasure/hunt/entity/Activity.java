@@ -45,6 +45,11 @@ public class Activity implements Serializable {
     private Long typeId;
 
     /**
+     * 1.藏宝，2帖子
+     */
+    private Byte type;
+
+    /**
      * 活动地址
      */
     private String address;
@@ -199,5 +204,13 @@ public class Activity implements Serializable {
 
     public void setLng(Double lng) {
         this.lng = lng;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

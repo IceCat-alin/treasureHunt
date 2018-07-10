@@ -23,6 +23,12 @@ public class CommentDto implements Serializable {
      */
     public static final Byte BEST_FALSE = 0;
 
+    /**
+     * 回答
+     */
+    public static final Byte TYPE_ANSWER = 1;
+
+
     private Long id;
 
     /**
@@ -69,6 +75,11 @@ public class CommentDto implements Serializable {
      * 回复
      */
     private Reply reply;
+
+    /**
+     * 类型 1.评论2.回答
+     */
+    private Byte type;
 
     public Long getId() {
         return id;
@@ -148,5 +159,13 @@ public class CommentDto implements Serializable {
 
     public void setReply(Reply reply) {
         this.reply = reply;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

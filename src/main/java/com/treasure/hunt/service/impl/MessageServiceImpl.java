@@ -109,4 +109,28 @@ public class MessageServiceImpl implements MessageService {
         message.get().setStatus(MessageDto.READ_TRUE);
         messageDao.save(message.get());
     }
+
+    /**
+     * 删除消息
+     *
+     * @param messageId
+     * @throws BusinessException
+     */
+    @Override
+    public void deleteMessage(Long messageId) throws BusinessException {
+        Optional<Message> message = messageDao.findById(messageId);
+        if (!message.isPresent()) {
+            throw new BusinessException("找不到id：" + messageId + "的消息");
+        }
+        messageDao.deleteById(messageId);
+    }
+
+    /**
+     * 获取未读数
+     * @return
+     */
+    @Override
+    public Integer getUnReadNum() {
+        return messageDao.countByStatus(MessageDto.READ_FALSE);
+    }
 }

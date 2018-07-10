@@ -34,8 +34,8 @@ public class CommentController {
      */
     @RequestMapping("/getCommentPage")
     @ResponseBody
-    public ResultInfo getCommentPage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
-        PageList<CommentDto> commentPage = commentService.getCommentPage(pageNo, pageSize, activityId);
+    public ResultInfo getCommentPage(Integer pageNo, Integer pageSize, Long activityId, Byte type) throws BusinessException {
+        PageList<CommentDto> commentPage = commentService.getCommentPage(pageNo, pageSize, activityId, type);
         return ResultInfo.success("分页查询评论成功", commentPage);
     }
 

@@ -80,13 +80,16 @@ public class CommentServiceImpl implements CommentService {
      * @throws BusinessException
      */
     @Override
-    public PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId) throws BusinessException {
+    public PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId, Byte type) throws BusinessException {
         int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
         int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
         PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("DESC", "isBest,createTime"));
 
         Criteria<Comment> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("activityId", activityId, true));
+        if (type != null) {
+            criteria.add(Restrictions.eq("type", type, true));
+        }
 
         Page<Comment> page = commentDao.findAll(criteria, pageable);
 
@@ -96,8 +99,7 @@ public class CommentServiceImpl implements CommentService {
         if (commentDtos != null && !commentDtos.isEmpty()) {
             List<Long> commentIds = ListBeanUtil.toList(commentDtos, "id");
             List<Long> customerIds = ListBeanUtil.toList(commentDtos, "customerId");
-            List<Long> toCustomerIds = ListBeanUtil.toList(commentDtos, "toCustomerId");
-            customerIds.addAll(toCustomerIds);
+
             List<WxCustomer> wxCustomerList = wxCustomerDao.findByCustomerIdIn(customerIds);
             Map<Long, WxCustomer> wxCustomerMap = ListBeanUtil.toMap(wxCustomerList, "customerId");
 
@@ -177,6 +179,9 @@ public class CommentServiceImpl implements CommentService {
         Optional<Comment> comment = commentDao.findById(commentId);
         if (!comment.isPresent()) {
             throw new BusinessException("找不到id：" + commentId + "的评论");
+        }
+        if (CommentDto.TYPE_ANSWER.equals(comment.get().getType())) {
+            throw new BusinessException("该评论是回答，无法删除");
         }
         commentDao.deleteById(commentId);
         activityStatisticsService.updateStatistics(comment.get().getActivityId(), "comment", "sub");

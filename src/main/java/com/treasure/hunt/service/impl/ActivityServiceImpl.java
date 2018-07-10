@@ -73,14 +73,20 @@ public class ActivityServiceImpl implements ActivityService {
     public void addActivity(ActivityDto activityDto) throws BusinessException {
         Activity activity = new Activity();
         ListBeanUtil.copyProperties(activityDto, activity);
-        activity.setStatus(ActivityDto.STATUS_AUDIT);
+        // 藏宝
+        if(ActivityDto.TYPE_TREASURE.equals(activity.getType())){
+            activity.setStatus(ActivityDto.STATUS_AUDIT);
+            try {
+                activity.setQrCode(wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.getId()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            activity.setStatus(ActivityDto.STATUS_START);
+            activity.setQrCode("");
+        }
         activity.setUpdateTime(new Date());
         activity.setCreateTime(new Date());
-        try {
-            activity.setQrCode(wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.getId()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         activity = activityDao.save(activity);
 
         ActivityStatistics activityStatistics = new ActivityStatistics();
@@ -399,6 +405,9 @@ public class ActivityServiceImpl implements ActivityService {
         }
         if (activityDto.getStatus() != null) {
             criteria.add(Restrictions.eq("status", activityDto.getStatus(), true));
+        }
+        if (activityDto.getType() != null) {
+            criteria.add(Restrictions.eq("type", activityDto.getType(), true));
         }
         if (StringUtils.isNotBlank(activityDto.getAddress())) {
             criteria.add(Restrictions.like("address", "%" + activityDto.getAddress() + "%", true));

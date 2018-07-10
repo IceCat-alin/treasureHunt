@@ -25,4 +25,8 @@ public class MessageTests {
         System.out.println(JSON.toJSON(messageService.getMessagePage(1,10,1L)));
     }
 
+    @Test
+    public void getUnReadNum() {
+        System.out.println(JSON.toJSON(messageService.getUnReadNum()));
+    }
 }

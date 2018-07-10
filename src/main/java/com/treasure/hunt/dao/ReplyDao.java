@@ -17,7 +17,7 @@ public interface ReplyDao extends JpaRepository<Reply, Long>, JpaSpecificationEx
      * @param commentIds
      * @return
      */
-    @Query("from Reply where commentId in :commentIds group by commentId")
+    @Query(value = "select * from reply where comment_id in :commentIds group by comment_id",nativeQuery = true)
     List<Reply> findByCommentIdsGroupByCommentId(@Param("commentIds") List<Long> commentIds);
 
 }

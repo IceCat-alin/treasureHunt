@@ -53,4 +53,29 @@ public class MessageController {
         messageService.setMessageRead(messageId);
         return ResultInfo.success("设置已读成功", null);
     }
+
+    /**
+     * 删除消息
+     *
+     * @param messageId
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/deleteMessage")
+    @ResponseBody
+    public ResultInfo deleteMessage(Long messageId) throws BusinessException {
+        messageService.deleteMessage(messageId);
+        return ResultInfo.success("删除消息成功", null);
+    }
+
+    /**
+     * 获取未读消息数
+     *
+     * @return
+     */
+    @RequestMapping("/getUnReadNum")
+    @ResponseBody
+    public ResultInfo getUnReadNum() {
+        return ResultInfo.success("获取未读消息数成功", messageService.getUnReadNum());
+    }
 }
