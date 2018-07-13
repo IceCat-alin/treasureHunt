@@ -30,4 +30,10 @@ public interface WxCustomerDao extends JpaRepository<WxCustomer, Long>, JpaSpeci
             "SELECT a.customer_id,(@rowno \\:=@rowno+1) AS rowno FROM wx_customer a,(" +
             "SELECT (@rowno \\:=0)) b ORDER BY a.integral DESC,create_time ASC) c WHERE c.customer_id=?1", nativeQuery = true)
     Map<String, Object> getRowNumByCustomerId(Long customerId);
+
+
+    @Query(value = "SELECT * FROM (" +
+            "SELECT a.customer_id,(@rowno \\:=@rowno+1) AS rowno FROM wx_customer a,(" +
+            "SELECT (@rowno \\:=0)) b ORDER BY a.integral DESC,create_time ASC) c LIMIT 5", nativeQuery = true)
+    List<Object[]> getRowNum();
 }

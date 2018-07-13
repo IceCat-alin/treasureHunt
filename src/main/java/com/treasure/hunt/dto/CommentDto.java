@@ -24,9 +24,19 @@ public class CommentDto implements Serializable {
     public static final Byte BEST_FALSE = 0;
 
     /**
+     * 评论
+     */
+    public static final Byte TYPE_COMMENT = 1;
+
+    /**
      * 回答
      */
-    public static final Byte TYPE_ANSWER = 1;
+    public static final Byte TYPE_ANSWER = 2;
+
+    /**
+     * 帖子
+     */
+    public static final Byte TYPE_TOPIC = 3;
 
 
     private Long id;

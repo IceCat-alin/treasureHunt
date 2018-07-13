@@ -22,10 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @Description 类描述：
@@ -156,7 +153,7 @@ public class WxAuthServiceImpl implements WxAuthService {
     }
 
     @Override
-    public Integer getRank(Long customerId) {
+    public Integer getMyRank(Long customerId) {
         Map<String, Object> map = wxCustomerDao.getRowNumByCustomerId(customerId);
         if (StringUtils.isNotBlank(map.get("rowno").toString())) {
             return (int) Math.ceil(Double.valueOf(map.get("rowno").toString()));
@@ -207,5 +204,24 @@ public class WxAuthServiceImpl implements WxAuthService {
         } else {
             return resultMap.get("access_token");
         }
+    }
+
+    /**
+     * 获取头号玩家排名
+     * @return
+     */
+    @Override
+    public List<WxCustomer> getRank() {
+        List<Object[]> list = wxCustomerDao.getRowNum();
+        List<Long> customerIds = new ArrayList<>();
+        for (Object[] objects : list) {
+            customerIds.add(Long.parseLong(objects[0].toString()));
+        }
+        List<WxCustomer> customerList;
+        if (!customerIds.isEmpty()) {
+            customerList = wxCustomerDao.findByCustomerIdIn(customerIds);
+            return customerList;
+        }
+        return null;
     }
 }

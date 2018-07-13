@@ -66,7 +66,13 @@ public class CommentServiceImpl implements CommentService {
         comment.setIsBest(CommentDto.BEST_FALSE);
         comment = commentDao.save(comment);
         activityStatisticsService.updateStatistics(commentDto.getActivityId(), "comment", "add");
-        messageService.addMessage(comment.getActivityId(), "您的藏宝有新评论了", MessageDto.TYPE_COMMENT);
+        String msg;
+        if (CommentDto.TYPE_TOPIC.equals(comment.getType())) {
+            msg = "您的帖子有新回帖了";
+        } else {
+            msg = "您的藏宝有新评论了";
+        }
+        messageService.addMessage(comment.getActivityId(), msg, MessageDto.TYPE_COMMENT);
         return comment;
     }
 
@@ -162,7 +168,6 @@ public class CommentServiceImpl implements CommentService {
         Map<Long, Long> map = new HashMap<>(16);
 
         for (Object[] objects : list) {
-            System.out.println(objects[0]);
             map.put(Long.parseLong(objects[0].toString()), Long.parseLong(objects[1].toString()));
         }
         return map;

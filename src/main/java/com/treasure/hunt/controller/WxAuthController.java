@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,9 +56,9 @@ public class WxAuthController {
     @ResponseBody
     public ResultInfo getCustomerInfo(Long customerId) throws BusinessException {
         WxCustomer wxCustomer = wxAuthService.getCustomerInfo(customerId);
-        wxCustomer.setOpenId(null);
-        Integer rank = wxAuthService.getRank(customerId);
+        Integer rank = wxAuthService.getMyRank(customerId);
         Map<String, Object> map = new HashMap<>(16);
+        wxCustomer.setOpenId(null);
         map.put("customer", wxCustomer);
         map.put("rank", rank);
         return ResultInfo.success("获取用户信息成功", map);
@@ -79,5 +80,15 @@ public class WxAuthController {
         return ResultInfo.success("分页查询活动成功", customerPageList);
     }
 
-
+    /**
+     * 获取玩家排名
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping(value = "/getRank")
+    @ResponseBody
+    public ResultInfo getRank() {
+        List<WxCustomer> customerList = wxAuthService.getRank();
+        return ResultInfo.success("获取头号玩家排名成功", customerList);
+    }
 }

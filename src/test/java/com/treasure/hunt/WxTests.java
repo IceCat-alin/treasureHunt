@@ -26,7 +26,12 @@ public class WxTests {
     }
 
     @Test
+    public void getMyRank() throws BusinessException {
+        System.out.println(wxAuthService.getMyRank(1L));
+    }
+
+    @Test
     public void getRank() throws BusinessException {
-        System.out.println(wxAuthService.getRank(4L));
+        System.out.println(wxAuthService.getRank());
     }
 }

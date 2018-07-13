@@ -4,6 +4,8 @@ import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.entity.WxCustomer;
 import com.treasure.hunt.framework.exception.BusinessException;
 
+import java.util.List;
+
 public interface WxAuthService {
 
     /**
@@ -19,7 +21,9 @@ public interface WxAuthService {
 
     WxCustomer getCustomerInfo(Long customerId) throws BusinessException;
 
-    Integer getRank(Long customerId);
+    Integer getMyRank(Long customerId);
 
     PageList<WxCustomer> getCustomerPage(Integer pageNo, Integer pageSize, WxCustomer wxCustomer);
+
+    List<WxCustomer> getRank();
 }
