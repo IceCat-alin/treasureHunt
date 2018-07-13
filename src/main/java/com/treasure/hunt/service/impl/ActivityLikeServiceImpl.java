@@ -63,7 +63,7 @@ public class ActivityLikeServiceImpl implements ActivityLikeService {
             activityLike.setUpdateTime(new Date());
             activityLikeDao.save(activityLike);
             activityStatisticsService.updateStatistics(activityId, "like", "add");
-            messageService.addMessage(activityId, "您的藏宝有新点赞了", MessageDto.TYPE_LIKE);
+            messageService.addMessage(activityId, "您有新点赞了", MessageDto.TYPE_LIKE);
         }
     }
 
