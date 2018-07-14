@@ -31,6 +31,6 @@ public interface ActivityStatisticsDao extends JpaRepository<ActivityStatistics,
      */
     List<ActivityStatistics> findByActivityIdIn(List<Long> activityIds);
 
-    @Query("select activityId from ActivityStatistics order by (viewNum + joinNum), createTime desc")
+    @Query("select activityId from ActivityStatistics where type = 1 order by (viewNum + joinNum), createTime desc")
     List<Long> getActivityIdOrderByViewAndJoin();
 }

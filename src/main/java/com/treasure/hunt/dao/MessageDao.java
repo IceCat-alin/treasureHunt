@@ -11,5 +11,5 @@ public interface MessageDao extends JpaRepository<Message, Long>, JpaSpecificati
      * @param status
      * @return
      */
-    Integer countByStatus(Byte status);
+    Integer countByStatusAndToCustomerId(Byte status,Long toCustomerId);
 }

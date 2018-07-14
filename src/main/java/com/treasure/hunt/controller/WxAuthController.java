@@ -87,7 +87,7 @@ public class WxAuthController {
      */
     @RequestMapping(value = "/getRank")
     @ResponseBody
-    public ResultInfo getRank() {
+    public ResultInfo getRank() throws BusinessException {
         List<WxCustomer> customerList = wxAuthService.getRank();
         return ResultInfo.success("获取头号玩家排名成功", customerList);
     }

@@ -14,5 +14,5 @@ public interface MessageService {
 
     void deleteMessage(Long messageId) throws BusinessException;
 
-    Integer getUnReadNum();
+    Integer getUnReadNum(Long customerId);
 }

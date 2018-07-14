@@ -74,14 +74,14 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activity = new Activity();
         ListBeanUtil.copyProperties(activityDto, activity);
         // 藏宝
-        if(ActivityDto.TYPE_TREASURE.equals(activity.getType())){
+        if (ActivityDto.TYPE_TREASURE.equals(activity.getType())) {
             activity.setStatus(ActivityDto.STATUS_AUDIT);
             try {
                 activity.setQrCode(wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.getId()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             activity.setStatus(ActivityDto.STATUS_START);
             activity.setQrCode("");
         }
@@ -93,6 +93,7 @@ public class ActivityServiceImpl implements ActivityService {
         activityStatistics.setActivityId(activity.getId());
         activityStatistics.setCreateTime(new Date());
         activityStatistics.setUpdateTime(new Date());
+        activityStatistics.setType(activity.getType());
         activityStatisticsDao.save(activityStatistics);
 
         addImage(activityDto.getImages(), activity.getId());
@@ -179,6 +180,12 @@ public class ActivityServiceImpl implements ActivityService {
         activity.get().setStatus(status);
         activity.get().setUpdateTime(new Date());
         activityDao.save(activity.get());
+        String msg;
+        if (ActivityDto.STATUS_START.equals(status)) {
+            msg = "您的藏宝申请已审核通过";
+        } else {
+            msg = "您的藏宝已结束";
+        }
         messageService.addMessage(activityId, "您的藏宝申请已审核通过", MessageDto.TYPE_AUDIT);
     }
 
@@ -190,7 +197,7 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public List<ActivityDto> getTopActivity() throws BusinessException {
-        List<Activity> activityList = activityDao.findByIsTop(ActivityDto.TOP_TRUE);
+        List<Activity> activityList = activityDao.findByIsTopAndType(ActivityDto.TOP_TRUE, ActivityDto.TYPE_TREASURE);
         if (activityList != null && activityList.size() < 3) {
             List<Long> activityIds = activityStatisticsDao.getActivityIdOrderByViewAndJoin();
             if (activityIds != null && !activityIds.isEmpty()) {

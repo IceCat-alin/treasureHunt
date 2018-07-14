@@ -2,6 +2,7 @@ package com.treasure.hunt.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.treasure.hunt.common.Constant;
+import com.treasure.hunt.common.ListBeanUtil;
 import com.treasure.hunt.common.PageList;
 import com.treasure.hunt.common.PageSort;
 import com.treasure.hunt.dao.WxCustomerDao;
@@ -208,18 +209,24 @@ public class WxAuthServiceImpl implements WxAuthService {
 
     /**
      * 获取头号玩家排名
+     *
      * @return
      */
     @Override
-    public List<WxCustomer> getRank() {
+    public List<WxCustomer> getRank() throws BusinessException {
         List<Object[]> list = wxCustomerDao.getRowNum();
         List<Long> customerIds = new ArrayList<>();
         for (Object[] objects : list) {
             customerIds.add(Long.parseLong(objects[0].toString()));
         }
-        List<WxCustomer> customerList;
         if (!customerIds.isEmpty()) {
-            customerList = wxCustomerDao.findByCustomerIdIn(customerIds);
+            List<WxCustomer> customerList = wxCustomerDao.findByCustomerIdIn(customerIds);
+            Map<Long, WxCustomer> customerMap = ListBeanUtil.toMap(customerList, "customerId");
+            customerList.clear();
+            for (Object[] objects : list) {
+                WxCustomer wxCustomer = customerMap.get(Long.parseLong(objects[0].toString()));
+                customerList.add(wxCustomer);
+            }
             return customerList;
         }
         return null;

@@ -59,6 +59,11 @@ public class ActivityStatistics implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 1.藏宝，2帖子
+     */
+    private Byte type;
+
     public Long getId() {
         return id;
     }
@@ -121,5 +126,13 @@ public class ActivityStatistics implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

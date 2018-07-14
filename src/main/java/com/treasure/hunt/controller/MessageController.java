@@ -75,7 +75,7 @@ public class MessageController {
      */
     @RequestMapping("/getUnReadNum")
     @ResponseBody
-    public ResultInfo getUnReadNum() {
-        return ResultInfo.success("获取未读消息数成功", messageService.getUnReadNum());
+    public ResultInfo getUnReadNum(Long customerId) {
+        return ResultInfo.success("获取未读消息数成功", messageService.getUnReadNum(customerId));
     }
 }

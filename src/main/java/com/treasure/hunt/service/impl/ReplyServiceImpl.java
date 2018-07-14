@@ -47,7 +47,7 @@ public class ReplyServiceImpl implements ReplyService {
     public PageList<Reply> getReplyPage(Integer pageNo, Integer pageSize, Long commentId) throws BusinessException {
         int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
         int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
-        PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("DESC", "createTime"));
+        PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("ASC", "createTime"));
 
         Criteria<Reply> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("commentId", commentId, true));

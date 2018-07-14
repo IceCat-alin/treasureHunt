@@ -127,10 +127,11 @@ public class MessageServiceImpl implements MessageService {
 
     /**
      * 获取未读数
+     *
      * @return
      */
     @Override
-    public Integer getUnReadNum() {
-        return messageDao.countByStatus(MessageDto.READ_FALSE);
+    public Integer getUnReadNum(Long toCustomerId) {
+        return messageDao.countByStatusAndToCustomerId(MessageDto.READ_FALSE, toCustomerId);
     }
 }

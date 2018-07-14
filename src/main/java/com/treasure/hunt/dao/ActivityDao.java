@@ -24,7 +24,8 @@ public interface ActivityDao extends JpaRepository<Activity, Long>, JpaSpecifica
 
     /**
      * 查找置顶的活动
+     *
      * @return
      */
-    List<Activity> findByIsTop(Byte isTop);
+    List<Activity> findByIsTopAndType(Byte isTop, Byte type);
 }

@@ -32,6 +32,6 @@ public class WxTests {
 
     @Test
     public void getRank() throws BusinessException {
-        System.out.println(wxAuthService.getRank());
+        System.out.println(JSON.toJSON(wxAuthService.getRank()));
     }
 }

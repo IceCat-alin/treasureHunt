@@ -91,6 +91,11 @@ public class CommentDto implements Serializable {
      */
     private Byte type;
 
+    /**
+     * 图片
+     */
+    private String image;
+
     public Long getId() {
         return id;
     }
@@ -177,5 +182,13 @@ public class CommentDto implements Serializable {
 
     public void setType(Byte type) {
         this.type = type;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

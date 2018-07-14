@@ -51,6 +51,11 @@ public class Comment implements Serializable {
     private Byte isBest;
 
     /**
+     * 图片
+     */
+    private String image;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -122,5 +127,13 @@ public class Comment implements Serializable {
 
     public void setType(Byte type) {
         this.type = type;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -25,5 +25,5 @@ public interface WxAuthService {
 
     PageList<WxCustomer> getCustomerPage(Integer pageNo, Integer pageSize, WxCustomer wxCustomer);
 
-    List<WxCustomer> getRank();
+    List<WxCustomer> getRank() throws BusinessException;
 }
