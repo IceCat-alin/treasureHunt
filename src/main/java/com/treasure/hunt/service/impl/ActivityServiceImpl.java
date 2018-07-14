@@ -94,6 +94,7 @@ public class ActivityServiceImpl implements ActivityService {
         activityStatistics.setCreateTime(new Date());
         activityStatistics.setUpdateTime(new Date());
         activityStatistics.setType(activity.getType());
+        activityStatistics.setStatus(activity.getStatus());
         activityStatisticsDao.save(activityStatistics);
 
         addImage(activityDto.getImages(), activity.getId());
@@ -186,7 +187,13 @@ public class ActivityServiceImpl implements ActivityService {
         } else {
             msg = "您的藏宝已结束";
         }
-        messageService.addMessage(activityId, "您的藏宝申请已审核通过", MessageDto.TYPE_AUDIT);
+        messageService.addMessage(activityId, msg, MessageDto.TYPE_AUDIT);
+
+        ActivityStatistics activityStatistics = activityStatisticsDao.findByActivityId(activityId);
+        if (activityStatistics != null) {
+            activityStatistics.setStatus(status);
+            activityStatisticsDao.save(activityStatistics);
+        }
     }
 
     /**

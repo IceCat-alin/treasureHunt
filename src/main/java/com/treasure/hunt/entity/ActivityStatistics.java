@@ -64,6 +64,11 @@ public class ActivityStatistics implements Serializable {
      */
     private Byte type;
 
+    /**
+     * 状态
+     */
+    private Byte status;
+
     public Long getId() {
         return id;
     }
@@ -134,5 +139,13 @@ public class ActivityStatistics implements Serializable {
 
     public void setType(Byte type) {
         this.type = type;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 }
