@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 127.0.0.1
+ Source Server         : 193.112.171.113
  Source Server Type    : MySQL
- Source Server Version : 50720
- Source Host           : localhost:3306
+ Source Server Version : 50721
+ Source Host           : 193.112.171.113:3306
  Source Schema         : treasure_hunt
 
  Target Server Type    : MySQL
- Target Server Version : 50720
+ Target Server Version : 50721
  File Encoding         : 65001
 
- Date: 02/07/2018 17:28:15
+ Date: 15/07/2018 13:47:35
 */
 
 SET NAMES utf8mb4;
@@ -28,11 +28,15 @@ CREATE TABLE `activity`  (
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '活动内容',
   `type_id` bigint(255) NOT NULL DEFAULT 0 COMMENT '活动类型',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '活动地址',
+  `lng` double(100, 20) NOT NULL DEFAULT 0.00000000000000000000 COMMENT '经度',
+  `lat` double(100, 20) NOT NULL DEFAULT 0.00000000000000000000 COMMENT '纬度',
   `end_time` datetime(0) NOT NULL COMMENT '结束时间',
   `qr_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '二维码',
   `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '活动状态：0审核中，1进行中，2活动结束',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `is_top` tinyint(4) NOT NULL DEFAULT 0 COMMENT '置顶0否1是',
+  `type` tinyint(4) NOT NULL DEFAULT 1 COMMENT '1藏宝2帖子',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -88,6 +92,8 @@ CREATE TABLE `activity_statistics`  (
   `join_num` int(10) NOT NULL DEFAULT 0 COMMENT '加入数',
   `create_time` datetime(0) NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT 1 COMMENT '活动类型',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '活动状态',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -102,20 +108,21 @@ CREATE TABLE `activity_type`  (
   `create_time` datetime(0) NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of activity_type
 -- ----------------------------
-INSERT INTO `activity_type` VALUES (1, '现金', 1, '2018-06-27 14:21:30', '2018-06-27 14:21:32');
-INSERT INTO `activity_type` VALUES (2, '卡卷', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:43');
-INSERT INTO `activity_type` VALUES (3, '书籍', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
-INSERT INTO `activity_type` VALUES (4, '数码', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
-INSERT INTO `activity_type` VALUES (5, '生活', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
-INSERT INTO `activity_type` VALUES (6, '私藏', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
-INSERT INTO `activity_type` VALUES (7, '食品', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
-INSERT INTO `activity_type` VALUES (8, '设备', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
-INSERT INTO `activity_type` VALUES (9, '其他', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (1, '保密', 1, '2018-06-27 14:21:30', '2018-06-27 14:21:32');
+INSERT INTO `activity_type` VALUES (2, '现金', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:43');
+INSERT INTO `activity_type` VALUES (3, '卡卷', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (4, '书籍', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (5, '数码', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (6, '生活', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (7, '私藏', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (8, '食品', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (9, '设备', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
+INSERT INTO `activity_type` VALUES (10, '其他', 1, '2018-06-27 14:22:41', '2018-06-27 14:22:41');
 
 -- ----------------------------
 -- Table structure for comment
@@ -127,12 +134,46 @@ CREATE TABLE `comment`  (
   `customer_id` bigint(20) NOT NULL COMMENT '评论用户id',
   `to_customer_id` bigint(20) NULL DEFAULT 0 COMMENT '被回复用户',
   `to_comment_id` bigint(20) NULL DEFAULT 0 COMMENT '被回复评论',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '评论内容',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论内容',
   `create_time` datetime(0) NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
-  `is_best` tinyint(4) NULL DEFAULT NULL,
+  `is_best` tinyint(4) NOT NULL DEFAULT 0,
+  `type` tinyint(4) NOT NULL DEFAULT 1 COMMENT '类型1评论2回答3帖子',
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '图片',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for message
+-- ----------------------------
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '消息Id',
+  `customer_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '发送人Id',
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '内容',
+  `type` tinyint(4) NOT NULL DEFAULT 0 COMMENT '1点赞,2评论,3审核通过',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `to_customer_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '接收人Id',
+  `activity_id` bigint(20) NULL DEFAULT NULL,
+  `status` tinyint(4) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for reply
+-- ----------------------------
+DROP TABLE IF EXISTS `reply`;
+CREATE TABLE `reply`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '规则id,自增主键',
+  `customer_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '顾客ID',
+  `comment_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '评论ID',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '回复内容',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `customer_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '评论回复表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user
