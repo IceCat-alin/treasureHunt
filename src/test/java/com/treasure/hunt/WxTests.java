@@ -34,4 +34,9 @@ public class WxTests {
     public void getRank() throws BusinessException {
         System.out.println(JSON.toJSON(wxAuthService.getRank()));
     }
+
+    @Test
+    public void getQrCode() throws Exception {
+        System.out.println(JSON.toJSON(wxAuthService.getQrCode("pages/detail/detail?activityId=9")));
+    }
 }

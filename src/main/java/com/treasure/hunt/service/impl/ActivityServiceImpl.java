@@ -76,15 +76,10 @@ public class ActivityServiceImpl implements ActivityService {
         // 藏宝
         if (ActivityDto.TYPE_TREASURE.equals(activity.getType())) {
             activity.setStatus(ActivityDto.STATUS_AUDIT);
-            try {
-                activity.setQrCode(wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.getId()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         } else {
             activity.setStatus(ActivityDto.STATUS_START);
-            activity.setQrCode("");
         }
+        activity.setQrCode("");
         activity.setUpdateTime(new Date());
         activity.setCreateTime(new Date());
         activity = activityDao.save(activity);
@@ -178,15 +173,20 @@ public class ActivityServiceImpl implements ActivityService {
         if (!activity.isPresent()) {
             throw new BusinessException("找不到id：" + activityId + "的活动");
         }
-        activity.get().setStatus(status);
-        activity.get().setUpdateTime(new Date());
-        activityDao.save(activity.get());
         String msg;
         if (ActivityDto.STATUS_START.equals(status)) {
+            try {
+                activity.get().setQrCode(wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.get().getId()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             msg = "您的藏宝申请已审核通过";
         } else {
             msg = "您的藏宝已结束";
         }
+        activity.get().setStatus(status);
+        activity.get().setUpdateTime(new Date());
+        activityDao.save(activity.get());
         messageService.addMessage(activityId, msg, MessageDto.TYPE_AUDIT);
 
         ActivityStatistics activityStatistics = activityStatisticsDao.findByActivityId(activityId);
