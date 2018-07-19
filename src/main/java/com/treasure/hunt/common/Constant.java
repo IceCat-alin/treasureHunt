@@ -64,7 +64,7 @@ public class Constant {
     /**
      * 微信小程序app secret
      */
-    public static final String APP_SECRET = "34c306b824d77b925411f782f7add009";
+    public static final String APP_SECRET = "34829d739ad0ad319556d73171d296df";
     /**
      * 微信小程序获取session的Url
      */

@@ -156,7 +156,7 @@ public class WxAuthServiceImpl implements WxAuthService {
     @Override
     public Integer getMyRank(Long customerId) {
         Map<String, Object> map = wxCustomerDao.getRowNumByCustomerId(customerId);
-        if (StringUtils.isNotBlank(map.get("rowno").toString())) {
+        if (map != null && map.get("rowno") != null && StringUtils.isNotBlank(map.get("rowno").toString())) {
             return (int) Math.ceil(Double.valueOf(map.get("rowno").toString()));
         }
         return 0;
