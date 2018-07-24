@@ -74,15 +74,28 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activity = new Activity();
         ListBeanUtil.copyProperties(activityDto, activity);
         // 藏宝
-        if (ActivityDto.TYPE_TREASURE.equals(activity.getType())) {
-            activity.setStatus(ActivityDto.STATUS_AUDIT);
-        } else {
-            activity.setStatus(ActivityDto.STATUS_START);
-        }
+        activity.setStatus(ActivityDto.STATUS_START);
         activity.setQrCode("");
         activity.setUpdateTime(new Date());
         activity.setCreateTime(new Date());
         activity = activityDao.save(activity);
+
+        try {
+            String qrCode = wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.getId());
+            activity.setQrCode(qrCode);
+            activity = activityDao.save(activity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (ActivityDto.TYPE_TREASURE.equals(activity.getType())) {
+            // 积分+1
+            Optional<WxCustomer> wxCustomer = wxCustomerDao.findById(activity.getCustomerId());
+            if (!wxCustomer.isPresent()) {
+                throw new BusinessException("找不到id：" + activity.getCustomerId() + "的用户");
+            }
+            wxCustomer.get().setIntegral(wxCustomer.get().getIntegral() + 1);
+            wxCustomerDao.save(wxCustomer.get());
+        }
 
         ActivityStatistics activityStatistics = new ActivityStatistics();
         activityStatistics.setActivityId(activity.getId());
