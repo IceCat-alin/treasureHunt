@@ -3,7 +3,6 @@ package com.treasure.hunt.service.impl;
 import com.treasure.hunt.common.Constant;
 import com.treasure.hunt.common.ListBeanUtil;
 import com.treasure.hunt.common.PageList;
-import com.treasure.hunt.common.PageSort;
 import com.treasure.hunt.dao.CommentDao;
 import com.treasure.hunt.dao.ReplyDao;
 import com.treasure.hunt.dao.WxCustomerDao;
@@ -21,6 +20,7 @@ import com.treasure.hunt.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +89,7 @@ public class CommentServiceImpl implements CommentService {
     public PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId, Byte type) throws BusinessException {
         int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
         int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
-        PageRequest pageable = PageRequest.of(currentPage, currentSize, PageSort.getSort("DESC", "isBest,createTime"));
+        PageRequest pageable = PageRequest.of(currentPage, currentSize, new Sort(Sort.Direction.DESC, "isBest").and(new Sort(Sort.Direction.ASC, "createTime")));
 
         Criteria<Comment> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("activityId", activityId, true));

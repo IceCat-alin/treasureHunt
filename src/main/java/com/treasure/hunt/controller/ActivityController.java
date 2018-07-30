@@ -40,7 +40,7 @@ public class ActivityController {
     @ResponseBody
     public ResultInfo addActivity(ActivityDto activityDto) throws BusinessException {
         activityService.addActivity(activityDto);
-        return ResultInfo.success("发起活动成功，请等待审核", null);
+        return ResultInfo.success("发起活动成功", null);
     }
 
     /**
@@ -54,7 +54,7 @@ public class ActivityController {
     @ResponseBody
     public ResultInfo updateActivity(ActivityDto activityDto) throws BusinessException {
         activityService.updateActivity(activityDto);
-        return ResultInfo.success("修改活动成功，请等待审核", null);
+        return ResultInfo.success("修改活动成功", null);
     }
 
     /**
