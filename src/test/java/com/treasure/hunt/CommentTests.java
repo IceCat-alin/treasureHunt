@@ -22,7 +22,7 @@ public class CommentTests {
     @Test
     public void getCommentPage() throws BusinessException {
         Byte type = 3;
-        System.out.println(JSON.toJSON(commentService.getCommentPage(1, 10, 28L, type)));
+        System.out.println(JSON.toJSON(commentService.getCommentPage(1, 10, 28L, type, null)));
     }
 
 

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -171,6 +172,35 @@ public class ActivityServiceImpl implements ActivityService {
         }
         activity.get().setUpdateTime(new Date());
         activityDao.save(activity.get());
+        ActivityStatistics activityStatistics = activityStatisticsDao.findByActivityId(activityId);
+        if (activityStatistics != null) {
+            activityStatistics.setIsTop(activity.get().getIsTop());
+            activityStatisticsDao.save(activityStatistics);
+        }
+    }
+
+    /**
+     * 获取最热活动
+     *
+     * @param pageNo
+     * @param pageSize
+     * @return
+     * @throws BusinessException
+     */
+    @Override
+    public PageList<ActivityDto> getHotActivity(Integer pageNo, Integer pageSize) throws BusinessException {
+        int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
+        int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
+        PageRequest pageable = PageRequest.of(currentPage, currentSize, new Sort(Sort.Direction.DESC, "isTop", "joinNum"));
+        Criteria<ActivityStatistics> criteria = new Criteria<>();
+        criteria.add(Restrictions.eq("type", 1, true));
+        Page<ActivityStatistics> page = activityStatisticsDao.findAll(criteria, pageable);
+
+        List<Long> activityIds = ListBeanUtil.toList(page.getContent(), "activityId");
+        List<Activity> activityList = activityDao.findByIdIn(activityIds);
+
+        List<ActivityDto> activityDtos = packData(activityList);
+        return new PageList(activityDtos, page.getTotalElements(), page.getTotalPages());
     }
 
     /**
@@ -207,28 +237,6 @@ public class ActivityServiceImpl implements ActivityService {
             activityStatistics.setStatus(status);
             activityStatisticsDao.save(activityStatistics);
         }
-    }
-
-    /**
-     * 获取置顶的活动
-     *
-     * @return
-     * @throws BusinessException
-     */
-    @Override
-    public List<ActivityDto> getTopActivity() throws BusinessException {
-        List<Activity> activityList = activityDao.findByIsTopAndType(ActivityDto.TOP_TRUE, ActivityDto.TYPE_TREASURE);
-        if (activityList != null && activityList.size() < 3) {
-            List<Long> activityIds = activityStatisticsDao.getActivityIdOrderByViewAndJoin();
-            if (activityIds != null && !activityIds.isEmpty()) {
-                if (activityIds.size() > 3) {
-                    activityIds = activityIds.subList(0, 3);
-                }
-                List<Activity> hotActivityList = activityDao.findByIdIn(activityIds);
-                activityList.addAll(hotActivityList);
-            }
-        }
-        return packData(activityList);
     }
 
     /**
@@ -356,6 +364,10 @@ public class ActivityServiceImpl implements ActivityService {
         if (!activity.isPresent()) {
             throw new BusinessException("找不到id：" + activityId + "的活动");
         }
+        // 删帖发通知
+        if (ActivityDto.TYPE_TOPIC.equals(activity.get().getType())) {
+            messageService.addMessage(activityId, "因为发布违规信息，被管理员删除，多次发布违规信息，将会被禁言。", MessageDto.TYPE_SYSTEM);
+        }
         activityDao.deleteById(activityId);
 
         // 删除活动统计
@@ -383,7 +395,6 @@ public class ActivityServiceImpl implements ActivityService {
         if (likeList != null && !likeList.isEmpty()) {
             activityLikeDao.deleteAll(likeList);
         }
-
     }
 
     /**

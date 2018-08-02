@@ -167,15 +167,16 @@ public class ActivityController {
     }
 
     /**
-     * 获取置顶活动
+     * 获取最热活动
      *
      * @return
      * @throws BusinessException
      */
-    @RequestMapping("/getTopActivity")
+    @RequestMapping("/getHotActivity")
     @ResponseBody
-    public ResultInfo getTopActivity() throws BusinessException {
-        return ResultInfo.success("获取置顶活动成功", activityService.getTopActivity());
+    public ResultInfo getHotActivity(Integer pageNo, Integer pageSize) throws BusinessException {
+        PageList<ActivityDto> activityPageList = activityService.getHotActivity(pageNo, pageSize);
+        return ResultInfo.success("分页查询最热活动成功", activityPageList);
     }
 
 }

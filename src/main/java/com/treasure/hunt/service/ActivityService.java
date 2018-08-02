@@ -14,8 +14,6 @@ public interface ActivityService {
 
     void setActivityStatus(Long activityId, Byte status) throws BusinessException;
 
-    List<ActivityDto> getTopActivity() throws BusinessException;
-
     PageList<ActivityDto> getActivityPage(Integer pageNo, Integer pageSize, String sort, String sortField, ActivityDto activityDto) throws BusinessException;
 
     List<ActivityDto> packData(List<Activity> domainList) throws BusinessException;
@@ -29,4 +27,6 @@ public interface ActivityService {
     void updateActivity(ActivityDto activityDto) throws BusinessException;
 
     void setTopActivity(Long activityId) throws BusinessException;
+
+    PageList<ActivityDto> getHotActivity(Integer pageNo, Integer pageSize) throws BusinessException;
 }

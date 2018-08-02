@@ -86,15 +86,18 @@ public class CommentServiceImpl implements CommentService {
      * @throws BusinessException
      */
     @Override
-    public PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId, Byte type) throws BusinessException {
+    public PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId, Byte type, Byte isBest) throws BusinessException {
         int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
         int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
-        PageRequest pageable = PageRequest.of(currentPage, currentSize, new Sort(Sort.Direction.DESC, "isBest").and(new Sort(Sort.Direction.ASC, "createTime")));
+        PageRequest pageable = PageRequest.of(currentPage, currentSize, new Sort(Sort.Direction.ASC, "createTime"));
 
         Criteria<Comment> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("activityId", activityId, true));
         if (type != null) {
             criteria.add(Restrictions.eq("type", type, true));
+        }
+        if (isBest != null) {
+            criteria.add(Restrictions.eq("isBest", isBest, true));
         }
 
         Page<Comment> page = commentDao.findAll(criteria, pageable);

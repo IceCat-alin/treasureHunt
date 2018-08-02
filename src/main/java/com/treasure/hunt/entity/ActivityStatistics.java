@@ -69,6 +69,8 @@ public class ActivityStatistics implements Serializable {
      */
     private Byte status;
 
+    private Byte isTop;
+
     public Long getId() {
         return id;
     }
@@ -147,5 +149,13 @@ public class ActivityStatistics implements Serializable {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public Byte getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(Byte isTop) {
+        this.isTop = isTop;
     }
 }

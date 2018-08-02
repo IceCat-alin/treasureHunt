@@ -37,9 +37,14 @@ public class MessageDto implements Serializable {
     public static final Byte TYPE_AUDIT = 3;
 
     /**
-     * 审核
+     * 加入
      */
     public static final Byte TYPE_JOIN = 4;
+
+    /**
+     * 系统通知
+     */
+    public static final Byte TYPE_SYSTEM = 5;
 
     private Long id;
 

@@ -3,7 +3,6 @@ package com.treasure.hunt;
 import com.alibaba.fastjson.JSON;
 import com.treasure.hunt.framework.exception.BusinessException;
 import com.treasure.hunt.service.ActivityService;
-import com.treasure.hunt.service.WxAuthService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class ActivityTests {
 
     @Test
     public void getTopActivity() throws BusinessException {
-        System.out.println(JSON.toJSON(activityService.getTopActivity()));
+        System.out.println(JSON.toJSON(activityService.getHotActivity(null, null)));
     }
 
 }

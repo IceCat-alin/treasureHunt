@@ -18,7 +18,7 @@ public interface CommentService {
 
     Comment addComment(CommentDto commentDto) throws BusinessException;
 
-    PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId, Byte type) throws BusinessException;
+    PageList<CommentDto> getCommentPage(Integer pageNo, Integer pageSize, Long activityId, Byte type, Byte isBest) throws BusinessException;
 
     void setBestComment(Long commentId) throws BusinessException;
 
