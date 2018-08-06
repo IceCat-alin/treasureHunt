@@ -28,5 +28,5 @@ public interface ActivityService {
 
     void setTopActivity(Long activityId) throws BusinessException;
 
-    PageList<ActivityDto> getHotActivity(Integer pageNo, Integer pageSize) throws BusinessException;
+    PageList<ActivityDto> getHotActivity(Integer pageNo, Integer pageSize, Long typeId) throws BusinessException;
 }

@@ -104,6 +104,7 @@ public class ActivityServiceImpl implements ActivityService {
         activityStatistics.setUpdateTime(new Date());
         activityStatistics.setType(activity.getType());
         activityStatistics.setStatus(activity.getStatus());
+        activityStatistics.setTypeId(activity.getTypeId());
         activityStatisticsDao.save(activityStatistics);
 
         addImage(activityDto.getImages(), activity.getId());
@@ -146,10 +147,16 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activity = activityOptional.get();
         ListBeanUtil.copyProperties(activityDto, activity, "status", "qrCode", "createTime", "type", "isTop");
         activity.setUpdateTime(new Date());
-        activityDao.save(activity);
+        activity = activityDao.save(activity);
         // 重新添加图片
         activityImageDao.deleteByActivityId(activity.getId());
         addImage(activityDto.getImages(), activity.getId());
+        // 更新类型
+        ActivityStatistics activityStatistics = activityStatisticsDao.findByActivityId(activityDto.getId());
+        if (activityStatistics != null) {
+            activityStatistics.setTypeId(activity.getTypeId());
+            activityStatisticsDao.save(activityStatistics);
+        }
 
     }
 
@@ -188,12 +195,15 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws BusinessException
      */
     @Override
-    public PageList<ActivityDto> getHotActivity(Integer pageNo, Integer pageSize) throws BusinessException {
+    public PageList<ActivityDto> getHotActivity(Integer pageNo, Integer pageSize, Long typeId) throws BusinessException {
         int currentPage = pageNo != null && pageNo > 0 ? pageNo - 1 : Constant.DEFAULT_PAGE;
         int currentSize = pageSize != null && pageSize > 0 ? pageSize : Constant.DEFAULT_SIZE;
         PageRequest pageable = PageRequest.of(currentPage, currentSize, new Sort(Sort.Direction.DESC, "isTop", "joinNum"));
         Criteria<ActivityStatistics> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("type", 1, true));
+        if (typeId != null) {
+            criteria.add(Restrictions.eq("typeId", typeId, true));
+        }
         Page<ActivityStatistics> page = activityStatisticsDao.findAll(criteria, pageable);
 
         List<Long> activityIds = ListBeanUtil.toList(page.getContent(), "activityId");

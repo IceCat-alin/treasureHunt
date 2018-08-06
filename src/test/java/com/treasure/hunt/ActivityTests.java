@@ -21,7 +21,7 @@ public class ActivityTests {
 
     @Test
     public void getTopActivity() throws BusinessException {
-        System.out.println(JSON.toJSON(activityService.getHotActivity(null, null)));
+        System.out.println(JSON.toJSON(activityService.getHotActivity(null, null, null)));
     }
 
 }

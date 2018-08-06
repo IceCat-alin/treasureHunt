@@ -71,6 +71,8 @@ public class ActivityStatistics implements Serializable {
 
     private Byte isTop;
 
+    private Long typeId;
+
     public Long getId() {
         return id;
     }
@@ -157,5 +159,13 @@ public class ActivityStatistics implements Serializable {
 
     public void setIsTop(Byte isTop) {
         this.isTop = isTop;
+    }
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
     }
 }

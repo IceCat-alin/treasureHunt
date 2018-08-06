@@ -82,6 +82,7 @@ public class ActivityController {
 
     /**
      * 设置置顶
+     *
      * @param activityId
      * @return
      * @throws BusinessException
@@ -174,8 +175,8 @@ public class ActivityController {
      */
     @RequestMapping("/getHotActivity")
     @ResponseBody
-    public ResultInfo getHotActivity(Integer pageNo, Integer pageSize) throws BusinessException {
-        PageList<ActivityDto> activityPageList = activityService.getHotActivity(pageNo, pageSize);
+    public ResultInfo getHotActivity(Integer pageNo, Integer pageSize, Long typeId) throws BusinessException {
+        PageList<ActivityDto> activityPageList = activityService.getHotActivity(pageNo, pageSize, typeId);
         return ResultInfo.success("分页查询最热活动成功", activityPageList);
     }
 
