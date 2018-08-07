@@ -74,8 +74,14 @@ public class ActivityServiceImpl implements ActivityService {
     public void addActivity(ActivityDto activityDto) throws BusinessException {
         Activity activity = new Activity();
         ListBeanUtil.copyProperties(activityDto, activity);
-        // 藏宝
-        activity.setStatus(ActivityDto.STATUS_START);
+        // 签到和大赛需要审核
+        if (ActivityDto.TYPE_TREASURE.equals(activity.getType())) {
+            if (activityDto.getTypeId().equals(2L) || activityDto.getTypeId().equals(3L)) {
+                activity.setStatus(ActivityDto.STATUS_AUDIT);
+            }
+        } else {
+            activity.setStatus(ActivityDto.STATUS_START);
+        }
         activity.setQrCode("");
         activity.setUpdateTime(new Date());
         activity.setCreateTime(new Date());
