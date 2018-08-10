@@ -78,6 +78,8 @@ public class ActivityServiceImpl implements ActivityService {
         if (ActivityDto.TYPE_TREASURE.equals(activity.getType())) {
             if (activityDto.getTypeId().equals(2L) || activityDto.getTypeId().equals(3L)) {
                 activity.setStatus(ActivityDto.STATUS_AUDIT);
+            } else {
+                activity.setStatus(ActivityDto.STATUS_START);
             }
         } else {
             activity.setStatus(ActivityDto.STATUS_START);
@@ -207,6 +209,7 @@ public class ActivityServiceImpl implements ActivityService {
         PageRequest pageable = PageRequest.of(currentPage, currentSize, new Sort(Sort.Direction.DESC, "isTop", "joinNum"));
         Criteria<ActivityStatistics> criteria = new Criteria<>();
         criteria.add(Restrictions.eq("type", 1, true));
+        criteria.add(Restrictions.ne("status", ActivityDto.STATUS_AUDIT, true));
         if (typeId != null) {
             criteria.add(Restrictions.eq("typeId", typeId, true));
         }
@@ -448,7 +451,10 @@ public class ActivityServiceImpl implements ActivityService {
      **/
     private Criteria<Activity> queryCondition(ActivityDto activityDto) {
         Criteria<Activity> criteria = new Criteria<>();
-        criteria.add(Restrictions.ne("status", ActivityDto.STATUS_AUDIT, true));
+        // status = 1 正在进行或者已结束
+        if (activityDto.getStatus() != null && activityDto.getStatus() == 1) {
+            criteria.add(Restrictions.ne("status", ActivityDto.STATUS_AUDIT, true));
+        }
         if (activityDto.getTypeId() != null) {
             criteria.add(Restrictions.eq("typeId", activityDto.getTypeId(), true));
         }
