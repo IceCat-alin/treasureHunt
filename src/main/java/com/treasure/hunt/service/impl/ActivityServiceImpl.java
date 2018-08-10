@@ -448,6 +448,7 @@ public class ActivityServiceImpl implements ActivityService {
      **/
     private Criteria<Activity> queryCondition(ActivityDto activityDto) {
         Criteria<Activity> criteria = new Criteria<>();
+        criteria.add(Restrictions.ne("status", ActivityDto.STATUS_AUDIT, true));
         if (activityDto.getTypeId() != null) {
             criteria.add(Restrictions.eq("typeId", activityDto.getTypeId(), true));
         }
@@ -456,9 +457,6 @@ public class ActivityServiceImpl implements ActivityService {
         }
         if (activityDto.getCustomerId() != null) {
             criteria.add(Restrictions.eq("customerId", activityDto.getCustomerId(), true));
-        }
-        if (activityDto.getStatus() != null) {
-            criteria.add(Restrictions.eq("status", activityDto.getStatus(), true));
         }
         if (activityDto.getType() != null) {
             criteria.add(Restrictions.eq("type", activityDto.getType(), true));
