@@ -90,7 +90,12 @@ public class ActivityServiceImpl implements ActivityService {
         activity = activityDao.save(activity);
 
         try {
-            String qrCode = wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.getId());
+            String qrCode;
+            if (ActivityDto.TYPE_TREASURE.equals(activity.getType())) {
+                qrCode = wxAuthService.getQrCode("pages/detail/detail?activityId=" + activity.getId());
+            }else{
+                qrCode = wxAuthService.getQrCode("pages/communityDetail/communityDetail?activityId=" + activity.getId());
+            }
             activity.setQrCode(qrCode);
             activity = activityDao.save(activity);
         } catch (Exception e) {
