@@ -60,11 +60,11 @@ public class Constant {
     /**
      * 微信小程序appid
      */
-    public static final String APP_ID = "wxaa69bd27ab1fe8af";
+    public static final String APP_ID = "wxb5b4d3b3c230bacf";
     /**
      * 微信小程序app secret
      */
-    public static final String APP_SECRET = "34829d739ad0ad319556d73171d296df";
+    public static final String APP_SECRET = "c46fe568f73a3f5e9abf044197911950";
     /**
      * 微信小程序获取session的Url
      */
